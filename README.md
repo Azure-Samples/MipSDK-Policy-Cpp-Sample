@@ -9,14 +9,6 @@ service: Microsoft Information Protection
 
 # MipSdk-PolicyApi-Cpp-Sample-Basic
 
-This sample illustrates basic SDK functionality where it:
-
-- Obtains the list of labels for the user
-- Prompts to input one of the label IDs
-- Prompts for a file path of a file to label
-- Applies the label
-- Reads the label from the document and displays metadata
-
 ## Summary
 
 This application demonstrates using the MIP SDK Policy API to list available labels. It prompts the user to input a label, then computes the actions that should be taken. It outputs the metadata that would be applied to the document.
