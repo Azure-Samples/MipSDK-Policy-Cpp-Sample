@@ -78,5 +78,10 @@ namespace sample {
 				mip::ActionType::PROTECT_DO_NOT_FORWARD;
 		}
 
+		std::map<std::string, std::shared_ptr<mip::ClassificationResult>> ExecutionStateImpl::GetClassificationResults(const std::vector<std::shared_ptr<mip::ClassificationRequest>>&) const
+		{
+			return std::map<std::string, std::shared_ptr<mip::ClassificationResult>>();
+		}
+
 	} //  namespace sample
 } //  namespace upe

@@ -47,11 +47,12 @@ namespace sample {
 			
 			Action(const mip::ApplicationInfo appInfo,
 				const std::string& username,
-				const std::string& password);
+				const std::string& password,
+				const bool generateAuditEvents);
 						
 			void ListLabels();							// List all labels associated engine loaded for user			
 			void ComputeAction(const ExecutionStateOptions& options); // Calculate actions for new label			
-
+			
 		private:
 			void AddNewProfile();					// Private function for adding and loading mip::FileProfile
 			void AddNewPolicyEngine();					// Private function for adding/loading mip::FileEngine for specified user
@@ -61,6 +62,8 @@ namespace sample {
 			std::shared_ptr<mip::PolicyEngine> mEngine;								// mip::FileEngine object to handle user-specific actions. 			
 			mip::ApplicationInfo mAppInfo;											// mip::ApplicationInfo object for storing client_id and friendlyname
 			std::shared_ptr<ProfileObserverImpl> mProfileObserver;
+			bool mGenerateAuditEvents;												// Set if application should submit audit events to AIP Analytics
+
 
 			std::string mUsername; // store username to pass to auth delegate and to generate Identity
 			std::string mPassword; // store password to pass to auth delegate

@@ -56,10 +56,12 @@ namespace sample {
 		// Specifically, AuthDelegateInfo uses mAppInfo.ApplicationId for AAD client_id value.		
 		Action::Action(const mip::ApplicationInfo appInfo,
 			const std::string& username,
-			const std::string& password)
+			const std::string& password,
+			const bool generateAuditEvents)
 			: mAppInfo(appInfo),
 			mUsername(username),
-			mPassword(password) {
+			mPassword(password),
+			mGenerateAuditEvents(generateAuditEvents) {
 			mAuthDelegate = std::make_shared<sample::auth::AuthDelegateImpl>(mAppInfo, mUsername, mPassword);
 		}
 
@@ -92,7 +94,7 @@ namespace sample {
 			}
 
 			// PolicyEngine requires a PolicyEngine::Settings object. The first parameter is the user identity or engine ID. 
-			PolicyEngine::Settings engineSettings(mip::Identity(mUsername), "");
+			PolicyEngine::Settings engineSettings(mip::Identity(mUsername), "", "en-US", mGenerateAuditEvents);
 
 			// Create promise and future for mip::PolicyEngine object
 			auto enginePromise = std::make_shared<std::promise<std::shared_ptr<PolicyEngine>>>();
