@@ -55,6 +55,7 @@ namespace sample {
 			std::string GetLabelId() const override { return mLabelId; }
 			std::vector<mip::UserRights> GetUserRights() const override { return mUserRights; };
 			std::vector<mip::UserRoles> GetUserRoles() const override { return mUserRoles; };
+			bool DoesContentExpire() const override { return mDoesContentExpire; }
 			std::chrono::time_point<std::chrono::system_clock> GetContentValidUntil() const override {
 				return mContentValidUntil;
 			}
@@ -74,6 +75,7 @@ namespace sample {
 			std::vector<mip::UserRoles> mUserRoles;
 			std::chrono::time_point<std::chrono::system_clock> mContentValidUntil;
 			bool mDoesAllowOfflineAccess;
+			bool mDoesContentExpire;
 			std::string mReferrer;
 			std::map<std::string, std::string> mEncryptedAppData;
 			std::map<std::string, std::string> mSignedAppData;

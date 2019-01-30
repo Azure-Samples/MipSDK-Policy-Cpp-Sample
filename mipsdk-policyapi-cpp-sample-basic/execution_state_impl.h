@@ -52,6 +52,8 @@ namespace sample {
 			std::string downgradeJustification;
 			std::string templateId;
 			mip::ContentFormat contentFormat = mip::ContentFormat::DEFAULT;
+			mip::ActionType supportedActions;
+			bool generateAuditEvent;
 		};
 
 		class ExecutionStateImpl final : public mip::ExecutionState {
@@ -59,13 +61,13 @@ namespace sample {
 			explicit ExecutionStateImpl(ExecutionStateOptions options) : mOptions(std::move(options)) {}
 
 			std::string GetNewLabelId() const override { return mOptions.newLabelId; }
+			mip::ActionSource GetNewLabelActionSource() const override { return mOptions.actionSource; }
 			mip::ContentState GetContentState() const override { return mOptions.contentState; }
+			std::string GetContentIdentifier() const override { return mOptions.contentIdentifier; }			
 			std::pair<bool, std::string> IsDowngradeJustified() const override {
 				return std::make_pair(mOptions.isDowngradeJustified, mOptions.downgradeJustification);
-			}
-			std::string GetContentIdentifier() const override { return mOptions.contentIdentifier; }
-			mip::ActionSource GetNewLabelActionSource() const override { return mOptions.actionSource; }
-			mip::AssignmentMethod GetNewLabelAssignmentMethod() const override { return mOptions.assignmentMethod; }
+			}			
+			mip::AssignmentMethod GetNewLabelAssignmentMethod() const override { return mOptions.assignmentMethod; }			
 			std::vector<std::pair<std::string, std::string>> GetNewLabelExtendedProperties() const override;
 			std::vector<std::pair<std::string, std::string>> GetContentMetadata(
 				const std::vector<std::string>& names,
@@ -76,6 +78,9 @@ namespace sample {
 
 			mip::ContentFormat GetContentFormat() const override { return mOptions.contentFormat; }
 			mip::ActionType GetSupportedActions() const override;
+			std::map<std::string, std::shared_ptr<mip::ClassificationResult>> GetClassificationResults(
+				const std::vector<std::shared_ptr<mip::ClassificationRequest>>& /*classificationIds*/) const override;
+			
 
 		private:
 			ExecutionStateOptions mOptions;

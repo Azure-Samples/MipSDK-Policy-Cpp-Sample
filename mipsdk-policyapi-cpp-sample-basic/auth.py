@@ -87,10 +87,10 @@ def main(argv):
 
   # Find everything after the last '/' and replace it with 'token'
   if not authority.endswith('token'):
-    regex = re.compile(r'^(.*[\/])')
+    regex = re.compile('^(.*[\/])')
     match = regex.match(authority)
     authority = match.group()
-    authority = authority + 'token'
+    authority = authority + 'common/oauth2/token'
 
   # Build REST call
   headers = {
