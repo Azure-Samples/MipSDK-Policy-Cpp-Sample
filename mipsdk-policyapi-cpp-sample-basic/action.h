@@ -49,9 +49,11 @@ namespace sample {
 				const std::string& username,
 				const std::string& password,
 				const bool generateAuditEvents);
-						
+			
+			~Action();
+					
 			void ListLabels();							// List all labels associated engine loaded for user			
-			void ComputeAction(const ExecutionStateOptions& options); // Calculate actions for new label			
+			std::vector<std::shared_ptr<mip::Action>> ComputeAction(const ExecutionStateOptions& options); // Calculate actions for new label			
 			
 		private:
 			void AddNewProfile();					// Private function for adding and loading mip::FileProfile

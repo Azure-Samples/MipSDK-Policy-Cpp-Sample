@@ -46,7 +46,7 @@ namespace sample {
 			std::string newLabelId;
 			std::string contentIdentifier;
 			mip::ActionSource actionSource = mip::ActionSource::MANUAL;
-			mip::ContentState contentState = mip::ContentState::REST;
+			mip::DataState dataState = mip::DataState::USE;
 			mip::AssignmentMethod assignmentMethod = mip::AssignmentMethod::STANDARD;
 			bool isDowngradeJustified = false;
 			std::string downgradeJustification;
@@ -62,7 +62,7 @@ namespace sample {
 
 			std::string GetNewLabelId() const override { return mOptions.newLabelId; }
 			mip::ActionSource GetNewLabelActionSource() const override { return mOptions.actionSource; }
-			mip::ContentState GetContentState() const override { return mOptions.contentState; }
+			mip::DataState GetDataState() const override { return mOptions.dataState; }
 			std::string GetContentIdentifier() const override { return mOptions.contentIdentifier; }			
 			std::pair<bool, std::string> IsDowngradeJustified() const override {
 				return std::make_pair(mOptions.isDowngradeJustified, mOptions.downgradeJustification);
@@ -78,7 +78,7 @@ namespace sample {
 
 			mip::ContentFormat GetContentFormat() const override { return mOptions.contentFormat; }
 			mip::ActionType GetSupportedActions() const override;
-			std::map<std::string, std::shared_ptr<mip::ClassificationResult>> GetClassificationResults(
+			std::shared_ptr<mip::ClassificationResults> GetClassificationResults(
 				const std::vector<std::shared_ptr<mip::ClassificationRequest>>& /*classificationIds*/) const override;
 			
 
