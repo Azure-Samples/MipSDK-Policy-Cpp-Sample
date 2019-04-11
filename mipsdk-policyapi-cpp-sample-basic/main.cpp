@@ -159,6 +159,12 @@ int main()
 					// Iterate through list of metadata to add and add to execution state.
 					for (const std::string oldMetadata : derivedAction->GetMetadataToRemove())
 					{
+						/******
+						*
+						* In this loop, your application should handle removing metadata from the file the user is labeling.
+						*
+						*******/
+
 						options.metadata.clear();
 
 						// Display metadata.
@@ -173,6 +179,12 @@ int main()
 					// Iterate through list of metadata to add and add to execution state.
 					for (const std::pair<std::string, std::string>& prop : derivedAction->GetMetadataToAdd())
 					{
+						/******
+						* 
+						* In this loop, your application should handle adding metadata to the file the user is labeling.
+						* 
+						*******/
+						
 						options.metadata[prop.first] = prop.second;
 
 						// Display metadata.
@@ -183,7 +195,14 @@ int main()
 			}
 
 
-			case mip::ActionType::PROTECT_BY_TEMPLATE: {												
+			case mip::ActionType::PROTECT_BY_TEMPLATE: {
+
+				/******
+				*
+				* Here, your application would call the protection API to apply protection to the data.
+				*
+				*******/
+
 				auto derivedAction = static_cast<mip::ProtectByTemplateAction*>(action.get());
 				options.templateId = derivedAction->GetTemplateId();
 
@@ -193,6 +212,13 @@ int main()
 			}
 
 			case mip::ActionType::REMOVE_PROTECTION: {
+
+				/******
+				*
+				* Here, your application would call the protection API to remove protection from the data.
+				*
+				*******/
+
 				cout << "*** Action Type: Remove Protection." << endl;
 				
 				// Set template to empty.
@@ -202,6 +228,13 @@ int main()
 													   
 
 			case mip::ActionType::JUSTIFY: {
+
+				/******
+				*
+				* Here, your application would call display some prompt to the user to provide justification on downgrading.
+				*
+				*******/
+
 				cout << "*** Action Type: Justification Required" << endl;				
 
 				// Enter some string for justification.
