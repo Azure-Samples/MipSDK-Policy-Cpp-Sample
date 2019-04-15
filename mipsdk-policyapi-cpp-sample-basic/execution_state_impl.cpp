@@ -72,15 +72,18 @@ namespace sample {
 			return mip::ActionType::ADD_CONTENT_FOOTER |
 				mip::ActionType::ADD_CONTENT_HEADER |
 				mip::ActionType::ADD_WATERMARK |
+				mip::ActionType::METADATA |
 				mip::ActionType::CUSTOM |
 				mip::ActionType::PROTECT_ADHOC |
 				mip::ActionType::PROTECT_BY_TEMPLATE |
-				mip::ActionType::PROTECT_DO_NOT_FORWARD;
+				mip::ActionType::PROTECT_DO_NOT_FORWARD | 
+				mip::ActionType::REMOVE_PROTECTION | 
+				mip::ActionType::JUSTIFY;
 		}
 
-		std::map<std::string, std::shared_ptr<mip::ClassificationResult>> ExecutionStateImpl::GetClassificationResults(const std::vector<std::shared_ptr<mip::ClassificationRequest>>&) const
+		std::shared_ptr<mip::ClassificationResults> ExecutionStateImpl::GetClassificationResults(const std::vector<std::shared_ptr<mip::ClassificationRequest>>&) const
 		{
-			return std::map<std::string, std::shared_ptr<mip::ClassificationResult>>();
+			return std::shared_ptr<mip::ClassificationResults>();
 		}
 
 	} //  namespace sample

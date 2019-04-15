@@ -27,6 +27,7 @@
 
 #include "action.h"
 
+#include "mip/mip_init.h"
 #include "mip/common_types.h"
 #include "mip/upe/action.h"
 #include "mip/upe/protect_by_template_action.h"
@@ -63,6 +64,13 @@ namespace sample {
 			mPassword(password),
 			mGenerateAuditEvents(generateAuditEvents) {
 			mAuthDelegate = std::make_shared<sample::auth::AuthDelegateImpl>(mAppInfo, mUsername, mPassword);
+		}
+
+		Action::~Action()
+		{
+			mProfile = nullptr;
+			mEngine = nullptr;
+			mip::ReleaseAllResources();
 		}
 
 		// Method illustrates how to create a new mip::PolicyProfile using promise/future
@@ -129,7 +137,7 @@ namespace sample {
 		}
 
 
-		void Action::ComputeAction(const ExecutionStateOptions& options)
+		std::vector<std::shared_ptr<mip::Action>> Action::ComputeAction(const ExecutionStateOptions& options)
 		{
 			// If an engine hasn't been added, add it.
 			if (!mEngine)
@@ -143,37 +151,13 @@ namespace sample {
 			state.reset(new ExecutionStateImpl(options));
 			auto handler = mEngine->CreatePolicyHandler("");
 			auto actions = handler->ComputeActions(*state);
-			
-			for (const auto action : actions)
+
+			if (options.generateAuditEvent && actions.size() == 0)
 			{
-				switch (action->GetType())
-				{					
-				case mip::ActionType::METADATA: {
-					auto derivedAction = static_cast<mip::MetadataAction*>(action.get());
-
-					for (const std::pair<std::string, std::string>& prop : derivedAction->GetMetadataToAdd())
-					{
-						cout << prop.first << " : " << prop.second << endl;
-					}
-					break;
-				}
-
-				case mip::ActionType::PROTECT_BY_TEMPLATE: {
-					auto derivedAction = static_cast<mip::ProtectByTemplateAction*>(action.get());
-
-					cout << "TemplateId: " << derivedAction->GetTemplateId() << endl;
-					break;
-				}
-
-				// Implement remaining case statements for all mip::ActionTypes
-
-				default:
-				{
-
-				}
-
-				}
+				handler->NotifyCommittedActions(*state);
 			}
+			
+			return actions;
 		}
 	}
 }

@@ -34,7 +34,7 @@
 
 #include "mip/protection_descriptor.h"
 
-namespace sample {
+	namespace sample {
 	namespace policy {
 		/**
 		 * @brief This class implements the ProtectionDescriptor class in a simple manner for the sample app.
@@ -53,9 +53,10 @@ namespace sample {
 			std::string GetDescription() const override { return mDescription; }
 			std::string GetTemplateId() const override { return mTemplateId; }
 			std::string GetLabelId() const override { return mLabelId; }
+			std::string GetContentId() const override { return mContentId;  }
 			std::vector<mip::UserRights> GetUserRights() const override { return mUserRights; };
 			std::vector<mip::UserRoles> GetUserRoles() const override { return mUserRoles; };
-			bool DoesContentExpire() const override { return mDoesContentExpire; }
+			bool DoesContentExpire() const override { return mContentValidUntil.time_since_epoch().count() != 0; }
 			std::chrono::time_point<std::chrono::system_clock> GetContentValidUntil() const override {
 				return mContentValidUntil;
 			}
@@ -71,17 +72,17 @@ namespace sample {
 			std::string mDescription;
 			std::string mTemplateId;
 			std::string mLabelId;
+			std::string mContentId;
 			std::vector<mip::UserRights> mUserRights;
 			std::vector<mip::UserRoles> mUserRoles;
 			std::chrono::time_point<std::chrono::system_clock> mContentValidUntil;
 			bool mDoesAllowOfflineAccess;
-			bool mDoesContentExpire;
 			std::string mReferrer;
 			std::map<std::string, std::string> mEncryptedAppData;
 			std::map<std::string, std::string> mSignedAppData;
 		};
-
-	} //  namespace sample
+	}
+	//  namespace sample
 } //  namespace upe
 
 #endif //  SAMPLES_UPE_PROTECTION_DESCRIPTOR_IMPL_H_

@@ -31,6 +31,8 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
+#include <sstream>
 
 #if defined(_WIN32) || defined(_WIN64)
 #define POPEN _popen
@@ -45,6 +47,7 @@ using std::ifstream;
 using std::runtime_error;
 using std::string;
 using std::unique_ptr;
+using std::vector;
 
 template<typename T>
 using custom_unique_ptr = unique_ptr<T, function<void(T*)>>;
@@ -72,6 +75,19 @@ namespace sample {
 			}
 
 			return result;
+		}
+
+		vector<string> SplitString(const string& str, char delim) {
+			vector<string> output;
+			std::stringstream ss(str);
+			string substr;
+
+			while (ss.good()) {
+				std::getline(ss, substr, delim);
+				output.emplace_back(move(substr));
+			}
+
+			return output;
 		}
 
 		bool FileExists(const char* path) {
