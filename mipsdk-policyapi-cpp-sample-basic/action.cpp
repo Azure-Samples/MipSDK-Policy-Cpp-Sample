@@ -45,6 +45,7 @@
 #include <future>
 
 using std::cout;
+using std::cin;
 using std::endl;
 
 using mip::PolicyProfile;
@@ -159,5 +160,156 @@ namespace sample {
 			
 			return actions;
 		}
+
+
+		bool Action::ComputeActionLoop(ExecutionStateOptions& options)
+		{
+			// If an engine hasn't been added, add it.
+			if (!mEngine)
+			{
+				AddNewPolicyEngine();
+			}
+
+			// ExecutionStateImpl is derived from mip::ExecutionState
+			std::unique_ptr<ExecutionStateImpl> state;
+			state.reset(new ExecutionStateImpl(options));
+			
+			auto handler = mEngine->CreatePolicyHandler("");
+			auto actions = handler->ComputeActions(*state);
+
+			while (actions.size() > 0)
+			{
+				cout << "Action Count: " << actions.size() << endl;
+
+				// Iterate through actions returned from ComputeActions()
+				for (const auto action : actions)
+				{
+					switch (action->GetType())
+					{
+					case mip::ActionType::METADATA: {
+
+						auto derivedAction = static_cast<mip::MetadataAction*>(action.get());
+
+						if (derivedAction->GetMetadataToRemove().size() > 0)
+						{
+							cout << "*** Action: Remove Metadata" << endl;
+
+							// Iterate through list of metadata to add and add to execution state.
+							for (const std::string oldMetadata : derivedAction->GetMetadataToRemove())
+							{
+								/******
+								*
+								* In this loop, your application should handle removing metadata from the file the user is labeling.
+								*
+								*******/
+
+								options.metadata.clear();
+
+								// Display metadata.
+								cout << oldMetadata << endl;
+							}
+						}
+
+						if (derivedAction->GetMetadataToAdd().size() > 0)
+						{
+							cout << "*** Action Type: Apply Metadata" << endl;
+
+							// Iterate through list of metadata to add and add to execution state.
+							for (const std::pair<std::string, std::string>& prop : derivedAction->GetMetadataToAdd())
+							{
+								/******
+								*
+								* In this loop, your application should handle adding metadata to the file the user is labeling.
+								*
+								*******/
+
+								options.metadata[prop.first] = prop.second;
+
+								// Display metadata.
+								cout << prop.first << " : " << prop.second << endl;
+							}
+						}
+						break;
+					}
+
+
+					case mip::ActionType::PROTECT_BY_TEMPLATE: {
+
+						/******
+						*
+						* Here, your application would call the protection API to apply protection to the data.
+						*
+						*******/
+
+						auto derivedAction = static_cast<mip::ProtectByTemplateAction*>(action.get());
+						options.templateId = derivedAction->GetTemplateId();
+
+						// Display Template ID.
+						cout << "*** Action Type: Protect By Template: " << options.templateId << endl;
+						break;
+					}
+
+					case mip::ActionType::REMOVE_PROTECTION: {
+
+						/******
+						*
+						* Here, your application would call the protection API to remove protection from the data.
+						*
+						*******/
+
+						cout << "*** Action Type: Remove Protection." << endl;
+
+						// Set template to empty.
+						options.templateId.resize(0);
+						break;
+					}
+
+
+					case mip::ActionType::JUSTIFY: {
+
+						/******
+						*
+						* Here, your application would call display some prompt to the user to provide justification on downgrading.
+						*
+						*******/
+
+						cout << "*** Action Type: Justification Required" << endl;
+
+						// Enter some string for justification.
+						cout << "Provide Justification: ";
+						cin >> options.downgradeJustification;
+						options.isDowngradeJustified = true;
+						cout << endl;
+						break;
+					}
+
+				    // Implement remaining case statements for all mip::ActionTypes
+
+					default:
+					{
+
+					}
+
+					}
+				}
+
+				// Compute actions based on new state information. 
+				// Update state
+				state.reset(new ExecutionStateImpl(options));
+
+				actions = handler->ComputeActions(*state);
+				
+				cout << "*** Remaining Action Count: " << actions.size() << endl;			
+			}
+
+			if (options.generateAuditEvent && actions.size() == 0)
+			{
+				handler->NotifyCommittedActions(*state);
+			}
+
+			return true;
+		}
 	}
+
+	
 }

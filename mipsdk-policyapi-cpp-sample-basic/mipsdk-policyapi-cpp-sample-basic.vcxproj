@@ -174,7 +174,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="auth.py" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.InformationProtection.Policy.1.2.134\build\native\Microsoft.InformationProtection.Policy.targets" Condition="Exists('..\packages\Microsoft.InformationProtection.Policy.1.2.134\build\native\Microsoft.InformationProtection.Policy.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.InformationProtection.Policy.1.2.134\build\native\Microsoft.InformationProtection.Policy.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.InformationProtection.Policy.1.2.134\build\native\Microsoft.InformationProtection.Policy.targets'))" />
+  </Target>
 </Project>

@@ -54,6 +54,7 @@ namespace sample {
 					
 			void ListLabels();							// List all labels associated engine loaded for user			
 			std::vector<std::shared_ptr<mip::Action>> ComputeAction(const ExecutionStateOptions& options); // Calculate actions for new label			
+			bool ComputeActionLoop(ExecutionStateOptions& options); // Loop on provided execution state options, updating each iteration until zero actions are needed. 
 			
 		private:
 			void AddNewProfile();					// Private function for adding and loading mip::FileProfile
