@@ -94,8 +94,7 @@ int main()
 	options.dataState = mip::DataState::USE;	
 	options.isDowngradeJustified = false;
 	options.generateAuditEvent = true;
-	options.templateId.resize(0);
-	
+		
 	// Compute Actions from the provided execution state
 	auto initialActions = action.ComputeAction(options);
 
@@ -130,139 +129,11 @@ int main()
 	// Update execution state to apply the new label.
 	options.newLabelId = newLabelId;
 	
-	// Compute actions for updated label. 
-	auto actions = action.ComputeAction(options);
+	// Provide desired execution state 
+	auto result = action.ComputeActionLoop(options);	
 	
-	int actionCount = actions.size();
+	system("pause");
 
-	// The ComputeActions() function will return actions that should be taken based on the current execution state.
-	// An application should continue to loop on ComputeActions, updating the execution state with each iteration
-	// until the number of returned actions is zero. 
-	while (actions.size() > 0)
-	{								
-		cout << "Action Count: " << actionCount << endl;
-
-		// Iterate through actions returned from ComputeActions()
- 		for (const auto action : actions)
-		{
-			switch (action->GetType())
-			{				
-			case mip::ActionType::METADATA: {				
-				
-
-				auto derivedAction = static_cast<mip::MetadataAction*>(action.get());
-
-				if (derivedAction->GetMetadataToRemove().size() > 0)
-				{
-					cout << "*** Action: Remove Metadata" << endl;
-
-					// Iterate through list of metadata to add and add to execution state.
-					for (const std::string oldMetadata : derivedAction->GetMetadataToRemove())
-					{
-						/******
-						*
-						* In this loop, your application should handle removing metadata from the file the user is labeling.
-						*
-						*******/
-
-						options.metadata.clear();
-
-						// Display metadata.
-						cout << oldMetadata << endl;
-					}
-				}
-
-				if (derivedAction->GetMetadataToAdd().size() > 0)
-				{
-					cout << "*** Action Type: Apply Metadata" << endl;
-
-					// Iterate through list of metadata to add and add to execution state.
-					for (const std::pair<std::string, std::string>& prop : derivedAction->GetMetadataToAdd())
-					{
-						/******
-						* 
-						* In this loop, your application should handle adding metadata to the file the user is labeling.
-						* 
-						*******/
-						
-						options.metadata[prop.first] = prop.second;
-
-						// Display metadata.
-						cout << prop.first << " : " << prop.second << endl;
-					}
-				}
-				break;
-			}
-
-
-			case mip::ActionType::PROTECT_BY_TEMPLATE: {
-
-				/******
-				*
-				* Here, your application would call the protection API to apply protection to the data.
-				*
-				*******/
-
-				auto derivedAction = static_cast<mip::ProtectByTemplateAction*>(action.get());
-				options.templateId = derivedAction->GetTemplateId();
-
-				// Display Template ID.
-				cout << "*** Action Type: Protect By Template: " << options.templateId << endl;				
-				break;
-			}
-
-			case mip::ActionType::REMOVE_PROTECTION: {
-
-				/******
-				*
-				* Here, your application would call the protection API to remove protection from the data.
-				*
-				*******/
-
-				cout << "*** Action Type: Remove Protection." << endl;
-				
-				// Set template to empty.
-				options.templateId.resize(0);
-				break;
-			}
-													   
-
-			case mip::ActionType::JUSTIFY: {
-
-				/******
-				*
-				* Here, your application would call display some prompt to the user to provide justification on downgrading.
-				*
-				*******/
-
-				cout << "*** Action Type: Justification Required" << endl;				
-
-				// Enter some string for justification.
-				cout << "Provide Justification: ";
-				cin >> options.downgradeJustification;
-				options.isDowngradeJustified = true;
-				cout << endl;
-				break;
-			}
-			
-			// Implement remaining case statements for all mip::ActionTypes
-
-			default:
-			{
-
-			}
-
-			}
-		}
-
-		// Compute actions based on new state information. 
-		actions = action.ComputeAction(options);
-		actionCount = actions.size();
-
-		cout << "*** Remaining Action Count: " << actionCount << endl;
-		system("pause");
-	}
-						
 	return 0;
 }
 
