@@ -23,32 +23,14 @@
 # THE SOFTWARE.
 #
 
+# make sure to run pip install adal, first. 
+# for non-windows setup, review https://github.com/AzureAD/azure-activedirectory-library-for-python/wiki/ADAL-basics
+
 import getopt
 import sys
 import json
-import urllib
 import re
-
-try:
-  from urllib.parse import urlencode
-  from urllib.request import urlopen, Request
-except ImportError: # backward compatible for python2
-  from urllib import urlencode
-  from urllib2 import urlopen, Request
-
-#
-# This script acquires auth tokens directly via a simple http request. This is
-# included only as a means to acquire auth tokens for use by the sample apps
-# and is not intended for use in production code. It will only work for tenants
-# that support straightforward username/password http authentication.
-#
-# For proper auth integration, please use Azure Active Directory Authentication
-# Library (ADAL), Active Directory v2 Libraries (MSAL), or other OAuth 2.0
-# libraries:
-#
-# https:// docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-libraries
-# https:// docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-libraries
-#
+from adal import AuthenticationContext
 
 def printUsage():
   print('auth.py -u <username> -p <password> -a <authority> -r <resource> -c <clientId>')
@@ -64,8 +46,9 @@ def main(argv):
   password = ''
   authority = ''
   resource = ''
-  clientId = ''
 
+  clientId = ''
+    
   for option, arg in options:
     if option == '-h':
       printUsage()
@@ -90,31 +73,11 @@ def main(argv):
     regex = re.compile('^(.*[\/])')
     match = regex.match(authority)
     authority = match.group()
-    authority = authority + 'common/oauth2/token'
+    authority = authority + username.split('@')[1]
 
-  # Build REST call
-  headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json'
-  }
+  auth_context = AuthenticationContext(authority)
+  token = auth_context.acquire_token_with_username_password(resource, username, password, clientId)
+  print(token["accessToken"])
 
-  params = {
-    'resource': resource,
-    'client_id': clientId,
-    'grant_type': 'password',
-    'username': username,
-    'password': password
-  }
-
-  req = Request(
-    url = authority,
-    headers = headers,
-    data = urlencode(params).encode("utf-8"))
-
-  f = urlopen(req)
-  response = f.read()
-  f.close()
-  sys.stdout.write(json.loads(response)['access_token'])
-
-if __name__ == '__main__':
+if __name__ == '__main__':  
   main(sys.argv[1:])

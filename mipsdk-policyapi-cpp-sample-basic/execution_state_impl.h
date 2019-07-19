@@ -43,7 +43,7 @@ namespace sample {
 
 		struct ExecutionStateOptions {
 			std::unordered_map<std::string, std::string> metadata;
-			std::string newLabelId;
+			std::shared_ptr<mip::Label> newLabel;
 			std::string contentIdentifier;
 			mip::ActionSource actionSource = mip::ActionSource::MANUAL;
 			mip::DataState dataState = mip::DataState::USE;
@@ -60,8 +60,7 @@ namespace sample {
 		public:
 			explicit ExecutionStateImpl(ExecutionStateOptions options) : mOptions(std::move(options)) {}
 
-			std::string GetNewLabelId() const override { return mOptions.newLabelId; }
-			mip::ActionSource GetNewLabelActionSource() const override { return mOptions.actionSource; }
+			std::shared_ptr<mip::Label> GetNewLabel() const override { return mOptions.newLabel; }			
 			mip::DataState GetDataState() const override { return mOptions.dataState; }
 			std::string GetContentIdentifier() const override { return mOptions.contentIdentifier; }			
 			std::pair<bool, std::string> IsDowngradeJustified() const override {
