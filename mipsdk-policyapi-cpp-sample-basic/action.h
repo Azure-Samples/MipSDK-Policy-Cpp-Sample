@@ -55,12 +55,14 @@ namespace sample {
 			void ListLabels();							// List all labels associated engine loaded for user			
 			std::vector<std::shared_ptr<mip::Action>> ComputeAction(const ExecutionStateOptions& options); // Calculate actions for new label			
 			bool ComputeActionLoop(ExecutionStateOptions& options); // Loop on provided execution state options, updating each iteration until zero actions are needed. 
-			
+			std::shared_ptr<mip::Label> GetLabelById(const std::string& labelId);
+
 		private:
 			void AddNewProfile();					// Private function for adding and loading mip::FileProfile
 			void AddNewPolicyEngine();					// Private function for adding/loading mip::FileEngine for specified user
 			
 			std::shared_ptr<sample::auth::AuthDelegateImpl> mAuthDelegate;			// AuthDelegateImpl object that will be used throughout the sample to store auth details.
+			std::shared_ptr<mip::MipContext> mMipContext;
 			std::shared_ptr<mip::PolicyProfile> mProfile;								// mip::FileProfile object to store/load state information 
 			std::shared_ptr<mip::PolicyEngine> mEngine;								// mip::FileEngine object to handle user-specific actions. 			
 			mip::ApplicationInfo mAppInfo;											// mip::ApplicationInfo object for storing client_id and friendlyname

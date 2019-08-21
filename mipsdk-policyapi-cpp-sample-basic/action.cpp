@@ -27,6 +27,7 @@
 
 #include "action.h"
 
+#include "mip/mip_context.h"
 #include "mip/mip_init.h"
 #include "mip/common_types.h"
 #include "mip/upe/action.h"
@@ -68,19 +69,32 @@ namespace sample {
 		}
 
 		Action::~Action()
-		{
-			mProfile = nullptr;
+		{			
 			mEngine = nullptr;
-			mip::ReleaseAllResources();
+			mProfile = nullptr;
+			mMipContext = nullptr;
 		}
 
 		// Method illustrates how to create a new mip::PolicyProfile using promise/future
 		// Result is stored in private mProfile variable and referenced throughout lifetime of Action.
 		void sample::policy::Action::AddNewProfile()
 		{
-			// Initialize the Profile::Settings Object. Example below stores state data in /file_sample/ directory 
+			// Create MipContext, providing state directory, app info, and setting logging level.
+			mMipContext = mip::MipContext::Create(
+				mAppInfo,
+				"mip_data",
+				mip::LogLevel::Trace,
+				false,
+				nullptr,
+				nullptr
+			);
+
+			// Initialize the Profile::Settings Object.  
 			// and permits use license caching of protected content. Accepts AuthDelegate, new Profile::Observer, and ApplicationInfo object as last parameters.
-			PolicyProfile::Settings profileSettings("mip_data", false, mAuthDelegate, std::make_shared<ProfileObserverImpl>(), mAppInfo);
+			PolicyProfile::Settings profileSettings(mMipContext, 
+				mip::CacheStorageType::OnDiskEncrypted, 
+				mAuthDelegate, 
+				std::make_shared<ProfileObserverImpl>());
 
 			// Create promise and future for mip::PolicyProfile object.
 			auto profilePromise = std::make_shared<std::promise<std::shared_ptr<PolicyProfile>>>();
@@ -113,6 +127,17 @@ namespace sample {
 			// then get the future value and set in mEngine. mEngine will be used throughout Action for engine operations.
 			mProfile->AddEngineAsync(engineSettings, enginePromise);
 			mEngine = engineFuture.get();
+		}
+
+
+		std::shared_ptr<mip::Label> Action::GetLabelById(const std::string& labelId)
+		{
+			if (!mEngine)
+			{
+				AddNewPolicyEngine();
+			}
+
+			return mEngine->GetLabelById(labelId);
 		}
 
 		// Function recursively lists all labels available for a user to	std::cout.
