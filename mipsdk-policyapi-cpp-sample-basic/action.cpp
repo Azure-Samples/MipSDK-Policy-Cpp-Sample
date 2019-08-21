@@ -84,6 +84,7 @@ namespace sample {
 				mAppInfo,
 				"mip_data",
 				mip::LogLevel::Trace,
+				false,
 				nullptr,
 				nullptr
 			);
