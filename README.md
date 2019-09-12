@@ -1,10 +1,12 @@
 ---
-services: microsoft-information-protection
-platforms: cpp
-author: tommoser
-level: 300
-client: Desktop
-service: Microsoft Information Protection
+page_type: sample
+languages:
+- cpp
+- python
+products:
+- azure
+description: "This application demonstrates using the MIP SDK Policy API to list available labels."
+urlFragment: mipsdk-policyapi-cpp-sample-basic
 ---
 
 # MipSdk-PolicyApi-Cpp-Sample-Basic
