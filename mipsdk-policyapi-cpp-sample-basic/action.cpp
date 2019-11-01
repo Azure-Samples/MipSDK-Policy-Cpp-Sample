@@ -28,7 +28,6 @@
 #include "action.h"
 
 #include "mip/mip_context.h"
-#include "mip/mip_init.h"
 #include "mip/common_types.h"
 #include "mip/upe/action.h"
 #include "mip/upe/protect_by_template_action.h"
