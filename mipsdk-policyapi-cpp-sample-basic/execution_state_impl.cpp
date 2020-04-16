@@ -38,30 +38,30 @@ namespace sample {
 			return vector<pair<string, string>>();
 		}
 
-		vector<pair<string, string>> ExecutionStateImpl::GetContentMetadata(
-			const vector<string>& names,
-			const vector<string>& namePrefixes) const {
-			unordered_map<string, string> filteredMetadata;
+        vector<mip::MetadataEntry> ExecutionStateImpl::GetContentMetadata(
+            const vector<string>& names,
+            const vector<string>& namePrefixes) const {
+            unordered_map<string, string> filteredMetadata;
 
-			for (const string& namePrefix : namePrefixes) {
-				for (const auto& prop : mOptions.metadata) {
-					if (prop.first.compare(0, namePrefix.length(), namePrefix) == 0)
-						filteredMetadata[prop.first] = prop.second;
-				}
-			}
+            for (const string& namePrefix : namePrefixes) {
+                for (const auto& prop : mOptions.metadata) {
+                    if (prop.first.compare(0, namePrefix.length(), namePrefix) == 0)
+                        filteredMetadata[prop.first] = prop.second;
+                }
+            }
 
-			for (const string& name : names) {
-				auto itName = mOptions.metadata.find(name);
-				if (itName != mOptions.metadata.end())
-					filteredMetadata[name] = itName->second;
-			}
+            for (const string& name : names) {
+                auto itName = mOptions.metadata.find(name);
+                if (itName != mOptions.metadata.end())
+                    filteredMetadata[name] = itName->second;
+            }
 
-			vector<pair<string, string>> result;
-			for (const auto& prop : filteredMetadata)
-				result.emplace_back(prop.first, prop.second);
+            vector<mip::MetadataEntry> result;
+            for (const auto& prop : filteredMetadata)
+                result.emplace_back(prop.first, prop.second);
 
-			return result;
-		}
+            return result;
+        }
 
 		mip::ActionType ExecutionStateImpl::GetSupportedActions() const {
 			//  The UPE SDK will always notify client of 'JUSTIFY', 'METADATA', and 'REMOVE*' actions. However an application can

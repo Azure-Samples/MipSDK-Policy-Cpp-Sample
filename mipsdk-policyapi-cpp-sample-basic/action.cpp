@@ -91,8 +91,7 @@ namespace sample {
 			// Initialize the Profile::Settings Object.  
 			// and permits use license caching of protected content. Accepts AuthDelegate, new Profile::Observer, and ApplicationInfo object as last parameters.
 			PolicyProfile::Settings profileSettings(mMipContext, 
-				mip::CacheStorageType::OnDiskEncrypted, 
-				mAuthDelegate, 
+				mip::CacheStorageType::OnDiskEncrypted,  
 				std::make_shared<ProfileObserverImpl>());
 
 			// Create promise and future for mip::PolicyProfile object.
@@ -116,7 +115,7 @@ namespace sample {
 			}
 
 			// PolicyEngine requires a PolicyEngine::Settings object. The first parameter is the user identity or engine ID. 
-			PolicyEngine::Settings engineSettings(mip::Identity(mUsername), "", "en-US", mGenerateAuditEvents);
+			PolicyEngine::Settings engineSettings(mip::Identity(mUsername), mAuthDelegate, "", "en-US", mGenerateAuditEvents);
 
 			// Create promise and future for mip::PolicyEngine object
 			auto enginePromise = std::make_shared<std::promise<std::shared_ptr<PolicyEngine>>>();
@@ -239,18 +238,18 @@ namespace sample {
 							cout << "*** Action Type: Apply Metadata" << endl;
 
 							// Iterate through list of metadata to add and add to execution state.
-							for (const std::pair<std::string, std::string>& prop : derivedAction->GetMetadataToAdd())
+							for (const mip::MetadataEntry& prop : derivedAction->GetMetadataToAdd())
 							{
 								/******
 								*
 								* In this loop, your application should handle adding metadata to the file the user is labeling.
 								*
-								*******/
+								*******/								
+								options.metadata.emplace(prop.GetKey(), prop.GetValue());
 
-								options.metadata[prop.first] = prop.second;
 
 								// Display metadata.
-								cout << prop.first << " : " << prop.second << endl;
+								cout << prop.GetKey() << " : " << prop.GetValue() << endl;
 							}
 						}
 						break;

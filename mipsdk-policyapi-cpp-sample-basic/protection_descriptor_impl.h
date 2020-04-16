@@ -64,23 +64,25 @@
 			std::string GetReferrer() const override { return mReferrer; }
 			std::map<std::string, std::string> GetEncryptedAppData() const override { return mEncryptedAppData; }
 			std::map<std::string, std::string> GetSignedAppData() const override { return mSignedAppData; }
+            std::string GetDoubleKeyUrl() const override { return mDoubleKeyUrl; }
 
-		private:
-			mip::ProtectionType mType;
-			std::string mName;
-			std::string mOwner;
-			std::string mDescription;
-			std::string mTemplateId;
-			std::string mLabelId;
-			std::string mContentId;
-			std::vector<mip::UserRights> mUserRights;
-			std::vector<mip::UserRoles> mUserRoles;
-			std::chrono::time_point<std::chrono::system_clock> mContentValidUntil;
-			bool mDoesAllowOfflineAccess;
-			std::string mReferrer;
-			std::map<std::string, std::string> mEncryptedAppData;
-			std::map<std::string, std::string> mSignedAppData;
-		};
+        private:
+            mip::ProtectionType mType;
+            std::string mName;
+            std::string mOwner;
+            std::string mDescription;
+            std::string mTemplateId;
+            std::string mLabelId;
+            std::string mContentId;
+            std::vector<mip::UserRights> mUserRights;
+            std::vector<mip::UserRoles> mUserRoles;
+            std::chrono::time_point<std::chrono::system_clock> mContentValidUntil;
+            bool mDoesAllowOfflineAccess = true;
+            std::string mReferrer;
+            std::map<std::string, std::string> mEncryptedAppData;
+            std::map<std::string, std::string> mSignedAppData;
+            std::string mDoubleKeyUrl;
+        };
 	}
 	//  namespace sample
 } //  namespace upe

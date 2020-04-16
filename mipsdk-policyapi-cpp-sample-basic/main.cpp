@@ -113,9 +113,9 @@ int main()
 		{
 			options.metadata.clear();
 			auto derivedAction = static_cast<mip::MetadataAction*>(action.get());
-			for (const std::pair<std::string, std::string>& prop : derivedAction->GetMetadataToAdd())
+			for (const mip::MetadataEntry& prop : derivedAction->GetMetadataToAdd())
 			{
-				options.metadata[prop.first] = prop.second;				
+				options.metadata[prop.GetKey()] = prop.GetValue();
 			}
 			break;
 		}
