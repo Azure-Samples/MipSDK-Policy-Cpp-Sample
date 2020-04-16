@@ -52,8 +52,8 @@ namespace sample {
 			std::string downgradeJustification;
 			std::string templateId;
 			mip::ContentFormat contentFormat = mip::ContentFormat::DEFAULT;
-			mip::ActionType supportedActions;
-			bool generateAuditEvent;
+			mip::ActionType supportedActions = mip::ActionType::REMOVE_WATERMARK;
+			bool generateAuditEvent = true;
 		};
 
 		class ExecutionStateImpl final : public mip::ExecutionState {
@@ -68,7 +68,7 @@ namespace sample {
 			}			
 			mip::AssignmentMethod GetNewLabelAssignmentMethod() const override { return mOptions.assignmentMethod; }			
 			std::vector<std::pair<std::string, std::string>> GetNewLabelExtendedProperties() const override;
-			std::vector<std::pair<std::string, std::string>> GetContentMetadata(
+			std::vector<mip::MetadataEntry> GetContentMetadata(
 				const std::vector<std::string>& names,
 				const std::vector<std::string>& namePrefixes) const override;
 			std::shared_ptr<mip::ProtectionDescriptor> GetProtectionDescriptor() const override {
