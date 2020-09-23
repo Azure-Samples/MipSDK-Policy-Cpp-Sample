@@ -57,22 +57,23 @@ int main()
 {
 	std::string newLabelId;
 	std::string currentLabelId;
+		
+	// Client ID should be the client ID registered in Azure AD for your custom application. 
 	std::string clientId = "YOUR CLIENT ID";
-	std::string appName = "YOUR APP NAME";
-	std::string appVersion = "YOUR APP VERSION";
+
+	// Username and password are required in this sample as the oauth2 token is obtained via Python script and MSAL auth.
+	// DO NOT embed credentials for administrative or production accounts. 
 	std::string userName = "YOUR TEST USER";
 	std::string password = "YOUR TEST USER PASSWORD";
-		
 
-	// Create the mip::ApplicationInfo object. 
-	// Client ID should be the client ID registered in Azure AD for your custom application.
-	// Friendly Name should be the name of the application as it should appear in reports.
-	mip::ApplicationInfo appInfo{clientId, appName, appVersion };
+	// Create the mip::ApplicationInfo object. 		
+	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.7.0" };
 
-	// All actions for this tutorial project are implemented in samples::policy::Action
-	// Source files are Action.h/cpp.	
+	// All actions for this tutorial project are implemented in samples::file::Action
+	// Source files are Action.h/cpp.
+	// "File" was chosen because this example is specifically for the MIP SDK File API. 
 	// Action's constructor takes in the mip::ApplicationInfo object and uses the client ID for auth.
-	// Username and password are required in this sample as the oauth2 token is obtained via Python script and basic auth.
+	// Final param enables or disable audit event generation.
 	Action action = Action(appInfo, userName, password, true);
 
 	// Call action.ListLabels() to display all available labels, then pause.
