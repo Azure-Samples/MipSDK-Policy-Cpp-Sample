@@ -51,7 +51,7 @@ namespace sample {
 			bool isDowngradeJustified = false;
 			std::string downgradeJustification;
 			std::string templateId;
-			mip::ContentFormat contentFormat = mip::ContentFormat::DEFAULT;
+			std::string contentFormat;
 			mip::ActionType supportedActions = mip::ActionType::REMOVE_WATERMARK;
 			bool generateAuditEvent = true;
 		};
@@ -74,8 +74,8 @@ namespace sample {
 			std::shared_ptr<mip::ProtectionDescriptor> GetProtectionDescriptor() const override {
 				return std::make_shared<ProtectionDescriptorImpl>(mOptions.templateId);
 			}
-
-			mip::ContentFormat GetContentFormat() const override { return mOptions.contentFormat; }
+			std::string GetContentFormat() const override { return mOptions.contentFormat; };
+			
 			mip::ActionType GetSupportedActions() const override;
 			std::shared_ptr<mip::ClassificationResults> GetClassificationResults(
 				const std::vector<std::shared_ptr<mip::ClassificationRequest>>& /*classificationIds*/) const override;
