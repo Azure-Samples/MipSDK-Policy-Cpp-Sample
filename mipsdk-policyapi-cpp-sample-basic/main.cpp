@@ -59,12 +59,12 @@ int main()
 	std::string currentLabelId;
 		
 	// Client ID should be the client ID registered in Azure AD for your custom application. 
-	std::string clientId = "aed76448-c9a0-4035-b77c-1f3f4e69a489";
+	std::string clientId = "YOUR CLIENT ID HERE";
 
 	// Username and password are required in this sample as the oauth2 token is obtained via Python script and MSAL auth.
 	// DO NOT embed credentials for administrative or production accounts. 
-	std::string userName = "alice@milt0r.com";
-	std::string password = "Kug11041";
+	std::string userName = "YOUR USERNAME HERE";
+	std::string password = "YOUR PASSWORD HERE";
 
 	// Create the mip::ApplicationInfo object. 		
 	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.7.0" };
