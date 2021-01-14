@@ -67,7 +67,7 @@ int main()
 	std::string password = "YOUR PASSWORD HERE";
 
 	// Create the mip::ApplicationInfo object. 		
-	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.7.0" };
+	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.8.0" };
 
 	// All actions for this tutorial project are implemented in samples::file::Action
 	// Source files are Action.h/cpp.
