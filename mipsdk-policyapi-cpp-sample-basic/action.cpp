@@ -71,22 +71,23 @@ namespace sample {
 		{			
 			mEngine = nullptr;
 			mProfile = nullptr;
+			mMipContext->ShutDown();
 			mMipContext = nullptr;
 		}
 
 		// Method illustrates how to create a new mip::PolicyProfile using promise/future
 		// Result is stored in private mProfile variable and referenced throughout lifetime of Action.
 		void sample::policy::Action::AddNewProfile()
-		{
-			// Create MipContext, providing state directory, app info, and setting logging level.
-			mMipContext = mip::MipContext::Create(
-				mAppInfo,
+		{			
+
+			// Initialize MipConfiguration.
+			std::shared_ptr<mip::MipConfiguration> mipConfiguration = std::make_shared<mip::MipConfiguration>(mAppInfo,
 				"mip_data",
 				mip::LogLevel::Trace,
-				false,
-				nullptr,
-				nullptr
-			);
+				false);
+
+			// Initialize MipContext. MipContext can be set to null at shutdown and will automatically release all resources.
+			mMipContext = mip::MipContext::Create(mipConfiguration);
 
 			// Initialize the Profile::Settings Object.  
 			// and permits use license caching of protected content. Accepts AuthDelegate, new Profile::Observer, and ApplicationInfo object as last parameters.

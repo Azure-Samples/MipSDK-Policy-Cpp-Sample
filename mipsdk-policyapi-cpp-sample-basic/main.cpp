@@ -59,15 +59,15 @@ int main()
 	std::string currentLabelId;
 		
 	// Client ID should be the client ID registered in Azure AD for your custom application. 
-	std::string clientId = "YOUR CLIENT ID HERE";
+	std::string clientId = "YOUR CLIENT ID";
 
 	// Username and password are required in this sample as the oauth2 token is obtained via Python script and MSAL auth.
 	// DO NOT embed credentials for administrative or production accounts. 
-	std::string userName = "YOUR USERNAME HERE";
-	std::string password = "YOUR PASSWORD HERE";
+	std::string userName = "YOUR TEST USER EMAIL";
+	std::string password = "YOUR TEST USER PASSWORD";
 
 	// Create the mip::ApplicationInfo object. 		
-	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.9.0" };
+	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.10.0" };
 
 	// All actions for this tutorial project are implemented in samples::file::Action
 	// Source files are Action.h/cpp.
@@ -96,7 +96,7 @@ int main()
 	options.newLabel = action.GetLabelById(currentLabelId);
 	options.actionSource = mip::ActionSource::MANUAL;
 	options.assignmentMethod = mip::AssignmentMethod::STANDARD;
-	options.contentFormat = mip::GetFileContentFormat();	
+	options.contentFormat = mip::GetEmailContentFormat();	
 	options.contentIdentifier = "MyTestFile.pptx";
 	options.dataState = mip::DataState::USE;	
 	options.isDowngradeJustified = false;
