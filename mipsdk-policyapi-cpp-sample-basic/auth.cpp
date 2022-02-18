@@ -51,23 +51,23 @@ namespace sample {
 		// Username, Password, and ClientId are provided by the user/developer		
 		// Resource and Authority are provided as part of the OAuth2Challenge object that is passed in by the SDK to the AuthDelegate.
 		string AcquireToken(
-			const string& username,
-			const string& password,
+			const string& tenantId,
+			const string& appKey,
 			const string& clientId,
 			const string& resource,
 			const string& authority) {
 
 			string cmd = "python";
 			if (sample::utils::FileExists("auth.py"))
-				cmd += " auth.py -u ";
+				cmd += " auth.py";
 			else if (sample::utils::FileExists("samples/auth/auth.py"))
-				cmd += " samples/auth/auth.py -u ";
+				cmd += " samples/auth/auth.py";
 			else
 				throw runtime_error("Unable to find auth script.");
-
-			cmd += username;
-			cmd += " -p ";
-			cmd += password;
+			cmd += " -t ";
+			cmd += tenantId;
+			cmd += " -k ";
+			cmd += appKey;
 			cmd += " -a ";
 			cmd += authority;
 			cmd += " -r ";

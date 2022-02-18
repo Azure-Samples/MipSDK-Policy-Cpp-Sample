@@ -45,14 +45,14 @@ namespace sample {
 
 			AuthDelegateImpl(
 				const mip::ApplicationInfo& applicationInfo,
-				const std::string& username,
-				const std::string& password);
+				const std::string& tenantId,
+				const std::string& appKey);
 						
 			bool AcquireOAuth2Token(const mip::Identity& identity, const OAuth2Challenge& challenge, OAuth2Token& token) override;
 
 		private:
-			std::string mUserName;
-			std::string mPassword;
+			std::string mTenantId;
+			std::string mAppKey;
 			std::string mClientId;	
 			mip::ApplicationInfo mApplicationInfo;
 		};

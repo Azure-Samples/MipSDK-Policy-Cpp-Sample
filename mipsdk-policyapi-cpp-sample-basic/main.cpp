@@ -60,12 +60,9 @@ int main()
 		
 	// Client ID should be the client ID registered in Azure AD for your custom application. 
 	std::string clientId = "YOUR CLIENT ID";
-
-	// Username and password are required in this sample as the oauth2 token is obtained via Python script and MSAL auth.
-	// DO NOT embed credentials for administrative or production accounts. 
-	std::string userName = "YOUR TEST USER EMAIL";
-	std::string password = "YOUR TEST USER PASSWORD";
-
+	std::string tenantId = "YOUR TENANT ID";
+	std::string appKey = "YOUR APP SECRET";
+	
 	// Create the mip::ApplicationInfo object. 		
 	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.11.0" };
 
@@ -74,7 +71,7 @@ int main()
 	// "File" was chosen because this example is specifically for the MIP SDK File API. 
 	// Action's constructor takes in the mip::ApplicationInfo object and uses the client ID for auth.
 	// Final param enables or disable audit event generation.
-	Action action = Action(appInfo, userName, password, true);
+	Action action = Action(appInfo, tenantId, appKey, true);
 
 	// Call action.ListLabels() to display all available labels, then pause.
 	action.ListLabels();

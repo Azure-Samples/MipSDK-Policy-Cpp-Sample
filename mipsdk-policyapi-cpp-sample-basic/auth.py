@@ -29,62 +29,80 @@ import getopt
 import sys
 import json
 import re
-from msal import PublicClientApplication
+import msal
 
 def printUsage():
-  print('auth.py -u <username> -p <password> -a <authority> -r <resource> -c <clientId>')
+  print('auth.py -k <app key> -a <authority> -r <resource> -c <clientId> -t <tenantId>')
 
 def main(argv):
   try:
-    options, args = getopt.getopt(argv, 'hu:p:a:r:c:')
+    options, args = getopt.getopt(argv, 'hk:a:r:t:c:')
   except getopt.GetoptError:
     printUsage()
     sys.exit(-1)
 
-  username = ''
-  password = ''
+  appKey = ''
   authority = ''
   resource = ''
-
   clientId = ''
+  tenantId = ''
     
   for option, arg in options:
     if option == '-h':
       printUsage()
       sys.exit()
-    elif option == '-u':
-      username = arg
-    elif option == '-p':
-      password = arg
+    elif option == '-k':
+      appKey = arg
     elif option == '-a':
       authority = arg
     elif option == '-r':
       resource = arg
     elif option == '-c':
       clientId = arg
+    elif option == '-t':
+      tenantId = arg
 
-  if username == '' or password == '' or authority == '' or resource == '' or clientId == '':
+  if appKey == '' or authority == '' or resource == '' or clientId == '' or tenantId == '':
     printUsage()
     sys.exit(-1)
 
   # ONLY FOR DEMO PURPOSES AND MSAL FOR PYTHON
   # This shouldn't be required when using proper auth flows in production.  
   if authority.find('common') > 1:
-    authority = authority.split('/common')[0] + "/organizations"
-   
-  app = PublicClientApplication(client_id=clientId, authority=authority)  
+    authority = authority.split('/common')[0] + "/" + tenantId
   
-  result = None  
+     
+  # Create a preferably long-lived app instance which maintains a token cache.
+  app = msal.ConfidentialClientApplication(
+    clientId, authority=authority,
+    client_credential=appKey,
+    # token_cache=...  # Default cache is in memory only.
+                       # You can learn how to use SerializableTokenCache from
+                       # https://msal-python.readthedocs.io/en/latest/#msal.SerializableTokenCache
+    )
 
+  result = None
+ 
   if resource.endswith('/'):
     resource += ".default"    
   else:
     resource += "/.default"
   
-  # *DO NOT* use username/password authentication in production system.
-  # Instead, consider auth code flow and using a browser to fetch the token.
-  result = app.acquire_token_by_username_password(username=username, password=password, scopes=[resource])  
-  print(result['access_token'])
+  scope = [resource]
+
+  result = app.acquire_token_silent(scope, account=None)
+  
+  if not result:
+    #logging.info("No suitable token exists in cache. Let's get a new one from AAD.")
+    result = app.acquire_token_for_client(scopes=scope)
+  
+  if "access_token" in result:
+    print(result['access_token'])
+
+  else:
+    print(result.get("error"))
+    print(result.get("error_description"))
+    print(result.get("correlation_id"))
 
 if __name__ == '__main__':  
   main(sys.argv[1:])

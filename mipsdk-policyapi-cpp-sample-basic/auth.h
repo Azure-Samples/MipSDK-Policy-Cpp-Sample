@@ -34,8 +34,8 @@ namespace sample {
 		std::string AcquireToken();
 
 		std::string AcquireToken(		
-			const std::string& username,
-			const std::string& password,
+			const std::string& tenandIt,
+			const std::string& appKey,
 			const std::string& clientId,
 			const std::string& resource,
 			const std::string& authority);
