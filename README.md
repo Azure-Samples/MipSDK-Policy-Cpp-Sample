@@ -4,12 +4,13 @@ languages:
 - cpp
 - python
 products:
-- azure
+- m365
+- office-365
 description: "This application demonstrates using the MIP SDK Policy API to list available labels."
-urlFragment: mipsdk-policyapi-cpp-sample-basic
+urlFragment: MipSDK-Policy-Cpp-Sample
 ---
 
-# MipSdk-PolicyApi-Cpp-Sample-Basic
+# MipSDK-Policy-Cpp-Sample
 
 ## Summary
 
