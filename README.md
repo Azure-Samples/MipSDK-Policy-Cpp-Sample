@@ -103,4 +103,5 @@ If the application fails to authenticate, ensure that python.exe is in the syste
 
 ## Resources
 
+- Please refer to the sample that has built-in authentication implemented in C++ on Windows [mipsdk-protectionapi-cpp-sample-basic](https://github.com/idaceappdev/mipsdk-protectionapi-cpp-sample-basic), instead of using the Python script explained in the current sample
 - [Microsoft Information Protection Docs](https://aka.ms/mipsdkdocs)
