@@ -28,8 +28,8 @@ The application demonstrates the following:
 
 ### Prerequisites
 
-- Visual Studio 2015 or later with Visual C++ development features installed
-- Python 2.7 installed and in the system path
+- Visual Studio 2019 or later with Visual C++ development features installed
+- Python 3.x installed and in the system path
 
 ### Sample Setup
 
@@ -41,17 +41,17 @@ The application demonstrates the following:
 4. Right click the project in Visual Studio and select **Manage NuGet Packages**
 5. Browse for *Microsoft.InformationProtection.Policy* and install.
 6. In Visual Studio, click the **Build** menu, then click **Build**. The application should compile at this point, but will crash if run.
-7. Continue to the steps below to configure the Azure AD App Registration and update the sample code.
+7. Continue to the steps below to configure the Microsoft Entra App Registration and update the sample code.
 
-### Create an Azure AD App Registration
+### Create a Microsoft Entra App Registration
 
-Authentication against the Azure AD tenant requires creating a native application registration. The client ID created in this step is used in a later step to generate an OAuth2 token.
+Authentication against the Microsoft Entra ID tenant requires creating a native application registration. The client ID created in this step is used in a later step to generate an OAuth2 token.
 
 > Skip this step if you've already created a registration for previous sample. You may continue to use that client ID.
 
 1. Go to https://portal.azure.com and log in as a global admin.
    > Your tenant may permit standard users to register applications. If you aren't a global admin, you can attempt these steps, but may need to work with a tenant administrator to have an application registered or be granted access to register applications.
-2. Select Azure Active Directory, then **App Registrations** on the left side menu.
+2. Select **Microsoft Entra ID**, then **App Registrations** on the left side menu.
 3. Select **New registration**
 4. For name, enter **MipSdk-Sample-Apps**
 5. Under **Supported account types** set **Accounts in this organizational directory only**
@@ -83,7 +83,7 @@ The **Application registration** screen should now be displaying your new applic
 ### Update Client ID, Username, and Password
 
 1. Open up **main.cpp**.
-2. Replace **YOUR CLIENT ID HERE** with the client ID copied from the AAD App Registration.
+2. Replace **YOUR CLIENT ID HERE** with the client ID copied from the Microsoft Entra App Registration.
 3. Find the tokens for **YOUR USERNAME HERE** and **YOUR PASSWORD HERE** and insert test user credentials. 
 
 > DO NOT hard code a production username and password.
@@ -98,7 +98,7 @@ Press F5 to run the sample. The console application will start and after a brief
 
 ## Troubleshooting
 
-If the application fails to authenticate, ensure that python.exe is in the system path and that the version is Python 2.7. Alternatively, updated line 61 in auth.cpp to point to the exact path of the executable.
+If the application fails to authenticate, ensure that python.exe is in the system path and that the version is Python 3.x. Alternatively, update line 61 in auth.cpp to point to the exact path of the executable.
 
 
 ## Resources
