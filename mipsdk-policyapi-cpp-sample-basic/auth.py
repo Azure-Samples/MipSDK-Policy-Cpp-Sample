@@ -22,8 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# make sure to run pip install adal, first. 
-# for non-windows setup, review https://github.com/AzureAD/azure-activedirectory-library-for-python/wiki/ADAL-basics
+# make sure to run pip install msal, first. 
+# for non-windows setup, review https://github.com/AzureAD/microsoft-authentication-library-for-python
 
 import getopt
 import sys
