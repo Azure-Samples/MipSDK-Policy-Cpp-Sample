@@ -85,7 +85,7 @@ namespace sample {
 			// (The parameter is incorrect) when setting the Authorization header.
 			auto lastNonWs = result.find_last_not_of(" 	
 ");
-			result = (lastNonWs != string::npos) ? result.substr(0, lastNonWs + 1) : "";
+			result = (lastNonWs != std::string::npos) ? result.substr(0, lastNonWs + 1) : "";
 
 			return result;
 		}
