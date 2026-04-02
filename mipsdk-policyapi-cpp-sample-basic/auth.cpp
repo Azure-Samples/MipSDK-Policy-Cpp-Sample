@@ -79,6 +79,14 @@ namespace sample {
 			if (result.empty())
 				throw runtime_error("Failed to acquire token. Ensure Python is installed correctly.");
 
+			// Trim trailing whitespace and newline characters.
+			// The Python script uses print() which appends a newline. If this newline
+			// is included in the token string, WinHTTP will reject it with error 87
+			// (The parameter is incorrect) when setting the Authorization header.
+			auto lastNonWs = result.find_last_not_of(" 	
+");
+			result = (lastNonWs != std::string::npos) ? result.substr(0, lastNonWs + 1) : "";
+
 			return result;
 		}
 	}
