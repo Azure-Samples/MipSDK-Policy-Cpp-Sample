@@ -62,7 +62,7 @@ No authentication environment variables or external helper processes are require
 1. In the Azure portal, open **Microsoft Entra ID** > **App registrations**.
 2. Create a native/public client registration.
 3. Add the delegated **UnifiedPolicy.User.Read** permission from **Microsoft Information Protection Sync Service** and grant the required consent.
-4. Open `main.cpp` and replace **YOUR CLIENT ID** and **YOUR TEST USER EMAIL**. The username is only a login hint and cache selector.
+4. Open `main.cpp` and replace **YOUR APPLICATION ID** and **YOUR USER UPN**. The username is only a login hint and cache selector.
 
 ### Set Redirect URI
 

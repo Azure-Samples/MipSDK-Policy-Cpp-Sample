@@ -36,12 +36,13 @@
 
 #include "mip/protection_descriptor.h"
 
-	namespace sample {
+namespace sample {
 	namespace policy {
 		/**
-		 * @brief This class implements the ProtectionDescriptor class in a simple manner for the sample app.
-		 * The protection SDK should be used to generate a similar class. If the use case is UPE only then this class
-		 * should hold state according to the protection specifications.
+		 * @brief Minimal template-based protection state used for policy action computation.
+		 *
+		 * A production application should populate this descriptor from the
+		 * protection state of the content being evaluated.
 		 */
 		class ProtectionDescriptorImpl final : public mip::ProtectionDescriptor {
 		public:
@@ -89,8 +90,7 @@
 			std::map<std::string, std::string> mSignedAppData;
 			std::string mDoubleKeyUrl;
 		};
-	}
-	//  namespace sample
-} //  namespace upe
+	} // namespace policy
+} // namespace sample
 
 #endif //  SAMPLES_UPE_PROTECTION_DESCRIPTOR_IMPL_H_

@@ -70,5 +70,5 @@ namespace sample {
 			}
 		}
 
-	} //  namespace sample
-} //  namespace auth
+	} // namespace auth
+} // namespace sample

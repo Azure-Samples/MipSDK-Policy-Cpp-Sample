@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2000
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mipsdk-policyapi-cpp-sample-basic", "mipsdk-policyapi-cpp-sample-basic\mipsdk-policyapi-cpp-sample-basic.vcxproj", "{F8C94F02-CAD2-4449-843F-D6ABCD8A6634}"
 EndProject

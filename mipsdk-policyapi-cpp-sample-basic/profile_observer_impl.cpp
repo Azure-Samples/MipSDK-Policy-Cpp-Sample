@@ -88,6 +88,5 @@ void ProfileObserverImpl::OnDeleteEngineFailure(const std::exception_ptr& Failur
 }
 
 void ProfileObserverImpl::OnPolicyChanged(const std::string& engineId) {
-	// mPolicyChangedHandler(engineId);
+	(void)engineId;
 }
-

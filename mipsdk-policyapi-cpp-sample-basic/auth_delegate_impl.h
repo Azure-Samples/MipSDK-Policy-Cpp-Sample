@@ -51,7 +51,7 @@ namespace sample {
 			mip::ApplicationInfo mApplicationInfo;
 		};
 
-	} //  namespace sample
-} //  namespace auth
+	} // namespace auth
+} // namespace sample
 
 #endif
