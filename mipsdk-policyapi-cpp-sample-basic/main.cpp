@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <vector>
@@ -53,32 +54,38 @@ using std::vector;
 
 using sample::policy::Action;
 
-int main()
+namespace {
+	void PauseForUser() {
+		std::cout << "Press Enter to continue...";
+		std::string line;
+		std::getline(std::cin, line);
+	}
+}
+
+int RunSample()
 {
 	std::string newLabelId;
 	std::string currentLabelId;
 		
 	// Client ID should be the client ID registered in Azure AD for your custom application. 
-	std::string clientId = "YOUR CLIENT ID";
+	std::string clientId = "7fb4841b-44d7-4c59-952b-14a5a0bdf174";
 
-	// Username and password are required in this sample as the oauth2 token is obtained via Python script and MSAL auth.
-	// DO NOT embed credentials for administrative or production accounts. 
-	std::string userName = "YOUR TEST USER EMAIL";
-	std::string password = "YOUR TEST USER PASSWORD";
+	// The username is a login hint for cache lookup and interactive MSAL authentication.
+	std::string userName = "tommos@zavasolutions.onmicrosoft.com";
 
 	// Create the mip::ApplicationInfo object. 		
-	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.11.0" };
+	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.18.0" };
 
 	// All actions for this tutorial project are implemented in samples::file::Action
 	// Source files are Action.h/cpp.
 	// "File" was chosen because this example is specifically for the MIP SDK File API. 
 	// Action's constructor takes in the mip::ApplicationInfo object and uses the client ID for auth.
 	// Final param enables or disable audit event generation.
-	Action action = Action(appInfo, userName, password, true);
+	Action action = Action(appInfo, userName, true);
 
 	// Call action.ListLabels() to display all available labels, then pause.
 	action.ListLabels();
-	system("pause");
+	PauseForUser();
 
 	// This label ID builds the initial execution state, simulating an existing label.
 	cout << endl << endl << "Enter a label ID: ";
@@ -139,12 +146,27 @@ int main()
 	// Provide desired execution state 
 	auto result = action.ComputeActionLoop(options);	
 	
-	system("pause");
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	PauseForUser();
 
 	return 0;
 }
 
-
-
-
+int main()
+{
+	try
+	{
+		return RunSample();
+	}
+	catch (const std::exception& error)
+	{
+		std::cerr << "Sample failed: " << error.what() << std::endl;
+		return 1;
+	}
+	catch (...)
+	{
+		std::cerr << "Sample failed." << std::endl;
+		return 1;
+	}
+}
 

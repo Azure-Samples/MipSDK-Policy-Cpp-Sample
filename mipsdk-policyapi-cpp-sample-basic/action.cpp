@@ -58,13 +58,11 @@ namespace sample {
 		// Specifically, AuthDelegateInfo uses mAppInfo.ApplicationId for AAD client_id value.		
 		Action::Action(const mip::ApplicationInfo appInfo,
 			const std::string& username,
-			const std::string& password,
 			const bool generateAuditEvents)
 			: mAppInfo(appInfo),
 			mUsername(username),
-			mPassword(password),
 			mGenerateAuditEvents(generateAuditEvents) {
-			mAuthDelegate = std::make_shared<sample::auth::AuthDelegateImpl>(mAppInfo, mUsername, mPassword);
+			mAuthDelegate = std::make_shared<sample::auth::AuthDelegateImpl>(mAppInfo, mUsername);
 		}
 
 		Action::~Action()
@@ -84,7 +82,8 @@ namespace sample {
 			std::shared_ptr<mip::MipConfiguration> mipConfiguration = std::make_shared<mip::MipConfiguration>(mAppInfo,
 				"mip_data",
 				mip::LogLevel::Trace,
-				false);
+				false,
+				mip::CacheStorageType::OnDiskEncrypted);
 
 			// Initialize MipContext. MipContext can be set to null at shutdown and will automatically release all resources.
 			mMipContext = mip::MipContext::Create(mipConfiguration);

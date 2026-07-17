@@ -28,7 +28,9 @@
 #define SAMPLES_UPE_PROTECTION_DESCRIPTOR_IMPL_H_
 
 #include <chrono> 
+#include <cstdint>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -52,6 +54,7 @@
 			std::string GetOwner() const override { return mOwner; }
 			std::string GetDescription() const override { return mDescription; }
 			std::string GetTemplateId() const override { return mTemplateId; }
+			mip::LabelInfo GetLabelInfo() const override { return mip::LabelInfo(mLabelId, ""); }
 			std::string GetLabelId() const override { return mLabelId; }
 			std::string GetContentId() const override { return mContentId;  }
 			std::vector<mip::UserRights> GetUserRights() const override { return mUserRights; };
@@ -64,25 +67,28 @@
 			std::string GetReferrer() const override { return mReferrer; }
 			std::map<std::string, std::string> GetEncryptedAppData() const override { return mEncryptedAppData; }
 			std::map<std::string, std::string> GetSignedAppData() const override { return mSignedAppData; }
-            std::string GetDoubleKeyUrl() const override { return mDoubleKeyUrl; }
+			std::string GetDoubleKeyUrl() const override { return mDoubleKeyUrl; }
+			std::shared_ptr<const std::vector<uint8_t>> GetSerializedTemplate() const override { return nullptr; }
+			std::shared_ptr<const mip::DynamicWatermark> GetDynamicWatermark() const override { return nullptr; }
+			std::string GetSupplementalInfo(const std::string&) const override { return ""; }
 
-        private:
-            mip::ProtectionType mType;
-            std::string mName;
-            std::string mOwner;
-            std::string mDescription;
-            std::string mTemplateId;
-            std::string mLabelId;
-            std::string mContentId;
-            std::vector<mip::UserRights> mUserRights;
-            std::vector<mip::UserRoles> mUserRoles;
-            std::chrono::time_point<std::chrono::system_clock> mContentValidUntil;
-            bool mDoesAllowOfflineAccess = true;
-            std::string mReferrer;
-            std::map<std::string, std::string> mEncryptedAppData;
-            std::map<std::string, std::string> mSignedAppData;
-            std::string mDoubleKeyUrl;
-        };
+		private:
+			mip::ProtectionType mType;
+			std::string mName;
+			std::string mOwner;
+			std::string mDescription;
+			std::string mTemplateId;
+			std::string mLabelId;
+			std::string mContentId;
+			std::vector<mip::UserRights> mUserRights;
+			std::vector<mip::UserRoles> mUserRoles;
+			std::chrono::time_point<std::chrono::system_clock> mContentValidUntil;
+			bool mDoesAllowOfflineAccess = true;
+			std::string mReferrer;
+			std::map<std::string, std::string> mEncryptedAppData;
+			std::map<std::string, std::string> mSignedAppData;
+			std::string mDoubleKeyUrl;
+		};
 	}
 	//  namespace sample
 } //  namespace upe

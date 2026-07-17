@@ -47,7 +47,6 @@ namespace sample {
 			
 			Action(const mip::ApplicationInfo appInfo,
 				const std::string& username,
-				const std::string& password,
 				const bool generateAuditEvents);
 			
 			~Action();
@@ -70,8 +69,7 @@ namespace sample {
 			bool mGenerateAuditEvents;												// Set if application should submit audit events to AIP Analytics
 
 
-			std::string mUsername; // store username to pass to auth delegate and to generate Identity
-			std::string mPassword; // store password to pass to auth delegate
+			std::string mUsername; // Login hint passed to MSAL and used to generate Identity.
 		};
 
 	}
