@@ -42,6 +42,8 @@ namespace sample {
 		};
 
 		static_assert(sizeof(void*) != 8 || sizeof(MipAuthRequestV1) == 120,
-			"MipAuthRequestV1 layout must match the managed ABI.");
+			"MipAuthRequestV1 layout must match the managed ABI (x64).");
+		static_assert(sizeof(void*) != 4 || sizeof(MipAuthRequestV1) == 72,
+			"MipAuthRequestV1 layout must match the managed ABI (x86).");
 	}
 }
