@@ -69,8 +69,8 @@ namespace sample {
 			mProfile = nullptr;
 			if (mMipContext) {
 				mMipContext->ShutDown();
-				mMipContext = nullptr;
 			}
+			mMipContext = nullptr;
 		}
 
 		// Load a Policy profile and bridge the asynchronous callback with a future.
