@@ -83,7 +83,7 @@ internal static class AuthenticationService
     private sealed record ClientState(IAuthenticationClient Client, SemaphoreSlim Gate);
 
     private static readonly ConcurrentDictionary<string, Lazy<ClientState>> Clients =
-        new(StringComparer.Ordinal);
+        new(StringComparer.OrdinalIgnoreCase);
 
     internal static async Task<string> AcquireTokenAsync(ValidatedAuthRequest request)
     {
