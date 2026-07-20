@@ -54,59 +54,51 @@ using mip::PolicyEngine;
 namespace sample {
 	namespace policy {
 
-		// Constructor accepts mip::ApplicationInfo object and uses it to initialize AuthDelegateImpl.
-		// Specifically, AuthDelegateInfo uses mAppInfo.ApplicationId for AAD client_id value.		
 		Action::Action(const mip::ApplicationInfo appInfo,
 			const std::string& username,
-			const std::string& password,
 			const bool generateAuditEvents)
 			: mAppInfo(appInfo),
 			mUsername(username),
-			mPassword(password),
 			mGenerateAuditEvents(generateAuditEvents) {
-			mAuthDelegate = std::make_shared<sample::auth::AuthDelegateImpl>(mAppInfo, mUsername, mPassword);
+			mAuthDelegate = std::make_shared<sample::auth::AuthDelegateImpl>(mAppInfo, mUsername);
 		}
 
 		Action::~Action()
 		{			
 			mEngine = nullptr;
 			mProfile = nullptr;
-			mMipContext->ShutDown();
+			if (mMipContext) {
+				mMipContext->ShutDown();
+			}
 			mMipContext = nullptr;
 		}
 
-		// Method illustrates how to create a new mip::PolicyProfile using promise/future
-		// Result is stored in private mProfile variable and referenced throughout lifetime of Action.
+		// Load a Policy profile and bridge the asynchronous callback with a future.
 		void sample::policy::Action::AddNewProfile()
 		{			
 
-			// Initialize MipConfiguration.
 			std::shared_ptr<mip::MipConfiguration> mipConfiguration = std::make_shared<mip::MipConfiguration>(mAppInfo,
 				"mip_data",
 				mip::LogLevel::Trace,
-				false);
+				false,
+				mip::CacheStorageType::OnDiskEncrypted);
 
-			// Initialize MipContext. MipContext can be set to null at shutdown and will automatically release all resources.
 			mMipContext = mip::MipContext::Create(mipConfiguration);
 
-			// Initialize the Profile::Settings Object.  
-			// and permits use license caching of protected content. Accepts AuthDelegate, new Profile::Observer, and ApplicationInfo object as last parameters.
+			// Persist the profile cache encrypted on disk and receive asynchronous
+			// completion through the profile observer.
 			PolicyProfile::Settings profileSettings(mMipContext, 
 				mip::CacheStorageType::OnDiskEncrypted,  
 				std::make_shared<ProfileObserverImpl>());
 
-			// Create promise and future for mip::PolicyProfile object.
 			auto profilePromise = std::make_shared<std::promise<std::shared_ptr<PolicyProfile>>>();
 			auto profileFuture = profilePromise->get_future();
 
-			// Call static function LoadAsync providing the settings and promise. This will make the profile available to use.
 			PolicyProfile::LoadAsync(profileSettings, profilePromise);
 
-			// Get the future value and store in mProfile. mProfile is used throughout Action for profile operations.
 			mProfile = profileFuture.get();
 		}
 
-		// Action::AddNewPolicyEngine adds an engine for a specific user. 		
 		void Action::AddNewPolicyEngine()
 		{
 			// If mProfile hasn't been set, use AddNewProfile() to set it.
@@ -115,15 +107,13 @@ namespace sample {
 				AddNewProfile();
 			}
 
-			// PolicyEngine requires a PolicyEngine::Settings object. The first parameter is the user identity or engine ID. 
+			// Configure a Policy engine for the requested user and authentication delegate.
 			PolicyEngine::Settings engineSettings(mip::Identity(mUsername), mAuthDelegate, "", "en-US", mGenerateAuditEvents);
 
-			// Create promise and future for mip::PolicyEngine object
 			auto enginePromise = std::make_shared<std::promise<std::shared_ptr<PolicyEngine>>>();
 			auto engineFuture = enginePromise->get_future();
 
-			// Engines are added to profiles. Call AddEngineAsync on mProfile, providing settings and promise
-			// then get the future value and set in mEngine. mEngine will be used throughout Action for engine operations.
+			// Bridge the asynchronous engine callback with a future.
 			mProfile->AddEngineAsync(engineSettings, enginePromise);
 			mEngine = engineFuture.get();
 		}
@@ -139,7 +129,7 @@ namespace sample {
 			return mEngine->GetLabelById(labelId);
 		}
 
-		// Function recursively lists all labels available for a user to	std::cout.
+		// Display top-level labels and their immediate children.
 		void Action::ListLabels() {
 
 			// If mEngine hasn't been set, call AddNewPolicyEngine() to load the engine.
@@ -147,14 +137,11 @@ namespace sample {
 				AddNewPolicyEngine();
 			}
 
-			// Use mip::PolicyEngine to list all labels
 			auto labels = mEngine->ListSensitivityLabels();
 
-			// Iterate through each label, first listing details
 			for (const auto& label : labels) {
 				cout << label->GetName() << " : " << label->GetId() << endl;
 
-				// get all children for mip::Label and list details
 				for (const auto& child : label->GetChildren()) {
 					cout << "->  " << child->GetName() << " : " << child->GetId() << endl;
 				}
@@ -170,7 +157,6 @@ namespace sample {
 				AddNewPolicyEngine();
 			}
 
-			// ExecutionStateImpl is derived from mip::ExecutionState
 			std::unique_ptr<ExecutionStateImpl> state;
 
 			state.reset(new ExecutionStateImpl(options));
@@ -194,7 +180,6 @@ namespace sample {
 				AddNewPolicyEngine();
 			}
 
-			// ExecutionStateImpl is derived from mip::ExecutionState
 			std::unique_ptr<ExecutionStateImpl> state;
 			state.reset(new ExecutionStateImpl(options));
 			
@@ -218,18 +203,17 @@ namespace sample {
 						{
 							cout << "*** Action: Remove Metadata" << endl;
 
-							// Iterate through list of metadata to add and add to execution state.
+							// Process metadata keys that should be removed from the content.
 							for (const std::string oldMetadata : derivedAction->GetMetadataToRemove())
 							{
 								/******
 								*
-								* In this loop, your application should handle removing metadata from the file the user is labeling.
+								* In this loop, your application should remove the requested metadata from the content being labeled.
 								*
 								*******/
 
-								options.metadata.clear();
+								options.metadata.erase(oldMetadata);
 
-								// Display metadata.
 								cout << oldMetadata << endl;
 							}
 						}
@@ -238,18 +222,17 @@ namespace sample {
 						{
 							cout << "*** Action Type: Apply Metadata" << endl;
 
-							// Iterate through list of metadata to add and add to execution state.
+							// Add the requested metadata to the simulated content state.
 							for (const mip::MetadataEntry& prop : derivedAction->GetMetadataToAdd())
 							{
 								/******
 								*
-								* In this loop, your application should handle adding metadata to the file the user is labeling.
+								* In this loop, your application should add or update metadata on the content being labeled.
 								*
 								*******/								
-								options.metadata.emplace(prop.GetKey(), prop.GetValue());
+								options.metadata.insert_or_assign(prop.GetKey(), prop.GetValue());
 
 
-								// Display metadata.
 								cout << prop.GetKey() << " : " << prop.GetValue() << endl;
 							}
 						}
@@ -268,7 +251,6 @@ namespace sample {
 						auto derivedAction = static_cast<mip::ProtectByTemplateAction*>(action.get());
 						options.templateId = derivedAction->GetTemplateId();
 
-						// Display Template ID.
 						cout << "*** Action Type: Protect By Template: " << options.templateId << endl;
 						break;
 					}
@@ -283,7 +265,6 @@ namespace sample {
 
 						cout << "*** Action Type: Remove Protection." << endl;
 
-						// Set template to empty.
 						options.templateId.resize(0);
 						break;
 					}
@@ -293,13 +274,12 @@ namespace sample {
 
 						/******
 						*
-						* Here, your application would call display some prompt to the user to provide justification on downgrading.
+						* Here, your application would prompt the user to justify lowering the label.
 						*
 						*******/
 
 						cout << "*** Action Type: Justification Required" << endl;
 
-						// Enter some string for justification.
 						cout << "Provide Justification: ";
 						cin >> options.downgradeJustification;
 						options.isDowngradeJustified = true;
@@ -307,7 +287,7 @@ namespace sample {
 						break;
 					}
 
-				    // Implement remaining case statements for all mip::ActionTypes
+				    // A production integration should implement every action type it declares as supported.
 
 					default:
 					{
@@ -317,8 +297,7 @@ namespace sample {
 					}
 				}
 
-				// Compute actions based on new state information. 
-				// Update state
+				// Recompute actions using the state updated by the previous results.
 				state.reset(new ExecutionStateImpl(options));
 
 				actions = handler->ComputeActions(*state);

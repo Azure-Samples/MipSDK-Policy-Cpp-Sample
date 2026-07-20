@@ -85,7 +85,7 @@ namespace sample {
 			ExecutionStateOptions mOptions;
 		};
 
-	} //  namespace sample
-} //  namespace upe
+	} // namespace policy
+} // namespace sample
 
 #endif //  SAMPLES_UPE_EXECUTION_STATE_IMPL_H_

@@ -64,19 +64,9 @@ namespace sample {
         }
 
 		mip::ActionType ExecutionStateImpl::GetSupportedActions() const {
-			//  The UPE SDK will always notify client of 'JUSTIFY', 'METADATA', and 'REMOVE*' actions. However an application can
-			//  choose not to support specific actions that may appear in a policy. (For instance, A policy may define a label to
-			//  require both protection and a watermark, but the application could decide not to support watermarks by not
-			//  including ADD_WATERMARK here. If that were the case, 'mip::PolicyEngine::ComputeActions' would never return
-			//  AddWatermark actions.)
-			return mip::ActionType::ADD_CONTENT_FOOTER |
-				mip::ActionType::ADD_CONTENT_HEADER |
-				mip::ActionType::ADD_WATERMARK |
-				mip::ActionType::METADATA |
-				mip::ActionType::CUSTOM |
-				mip::ActionType::PROTECT_ADHOC |
+			// Declare every action type this sample is prepared to process.
+			return mip::ActionType::METADATA |
 				mip::ActionType::PROTECT_BY_TEMPLATE |
-				mip::ActionType::PROTECT_DO_NOT_FORWARD | 
 				mip::ActionType::REMOVE_PROTECTION | 
 				mip::ActionType::JUSTIFY;
 		}
@@ -86,5 +76,5 @@ namespace sample {
 			return std::shared_ptr<mip::ClassificationResults>();
 		}
 
-	} //  namespace sample
-} //  namespace upe
+	} // namespace policy
+} // namespace sample

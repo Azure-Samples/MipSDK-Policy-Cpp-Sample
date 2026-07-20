@@ -38,9 +38,7 @@
 
 class ProfileObserverImpl final : public mip::PolicyProfile::Observer {
 public:
-	// ProfileObserverImpl(std::function<void(const std::string&)>&& policyChangedHandler) { }
 	ProfileObserverImpl() {}
-	//  Observer implementation
 	virtual void OnLoadSuccess(const std::shared_ptr<mip::PolicyProfile>& profile, const std::shared_ptr<void>& context) override;
 	virtual void OnLoadFailure(const std::exception_ptr& Failure,	const std::shared_ptr<void>& context) override;
 

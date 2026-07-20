@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <vector>
@@ -53,46 +54,49 @@ using std::vector;
 
 using sample::policy::Action;
 
-int main()
+namespace {
+	void PauseForUser() {
+		std::cout << "Press Enter to continue...";
+		std::string line;
+		std::getline(std::cin, line);
+	}
+}
+
+int RunSample()
 {
 	std::string newLabelId;
 	std::string currentLabelId;
 		
-	// Client ID should be the client ID registered in Azure AD for your custom application. 
-	std::string clientId = "YOUR CLIENT ID";
+	// Client ID should be the client ID registered in Microsoft Entra ID for your custom application.
+	std::string clientId = "<YOUR APPLICATION ID>";
 
-	// Username and password are required in this sample as the oauth2 token is obtained via Python script and MSAL auth.
-	// DO NOT embed credentials for administrative or production accounts. 
-	std::string userName = "YOUR TEST USER EMAIL";
-	std::string password = "YOUR TEST USER PASSWORD";
+	// The username is a login hint for cache lookup and interactive MSAL authentication.
+	std::string userName = "<YOUR USER UPN>";
 
-	// Create the mip::ApplicationInfo object. 		
-	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.11.0" };
+	// Identify this application to the MIP SDK and Microsoft Entra ID.
+	mip::ApplicationInfo appInfo{ clientId, "MIP SDK Policy Sample for C++", "1.18.0" };
 
-	// All actions for this tutorial project are implemented in samples::file::Action
-	// Source files are Action.h/cpp.
-	// "File" was chosen because this example is specifically for the MIP SDK File API. 
-	// Action's constructor takes in the mip::ApplicationInfo object and uses the client ID for auth.
-	// Final param enables or disable audit event generation.
-	Action action = Action(appInfo, userName, password, true);
+	// Action coordinates the Policy profile, user-specific engine, authentication,
+	// and action computation. The final argument enables audit event generation.
+	Action action = Action(appInfo, userName, true);
 
-	// Call action.ListLabels() to display all available labels, then pause.
+	// Display top-level labels and their immediate children, then pause.
 	action.ListLabels();
-	system("pause");
+	PauseForUser();
 
-	// This label ID builds the initial execution state, simulating an existing label.
+	// Select the label currently applied to the simulated content.
 	cout << endl << endl << "Enter a label ID: ";
 	cin >> currentLabelId;
 
-	// This label ID builds the new execution state, simulating an updated label.
+	// Select the label to apply.
 	cout << endl << "Enter a new label ID: ";
 	cin >> newLabelId;
 
-	// Set execution state options and provide to ComputeActions. 
+	// Describe the simulated content and labeling operation.
 	sample::policy::ExecutionStateOptions options;
 
-	// Build execution state for "current label"
-	// This will be used to get metadata to feed to ComputeActions() function to simulate a label change.
+	// Compute the state produced by the current label so it can be used as the
+	// starting point for the label change.
 	options.newLabel = action.GetLabelById(currentLabelId);
 	options.actionSource = mip::ActionSource::MANUAL;
 	options.assignmentMethod = mip::AssignmentMethod::STANDARD;
@@ -102,10 +106,9 @@ int main()
 	options.isDowngradeJustified = false;
 	options.generateAuditEvent = true;
 		
-	// Compute Actions from the provided execution state
 	auto initialActions = action.ComputeAction(options);
 
-	// Fetch METADATA action, parse metadata, add to execution state.
+	// Capture metadata and template protection produced by the current label.
 	for (const auto action : initialActions)
 	{
 		switch (action->GetType())
@@ -133,18 +136,32 @@ int main()
 		}
 	}
 
-	// Update execution state to apply the new label.
+	// Update the desired state to the new label.
 	options.newLabel = action.GetLabelById(newLabelId);
 	
-	// Provide desired execution state 
+	// Compute and process actions until the desired state is satisfied.
 	auto result = action.ComputeActionLoop(options);	
 	
-	system("pause");
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	PauseForUser();
 
 	return 0;
 }
 
-
-
-
-
+int main()
+{
+	try
+	{
+		return RunSample();
+	}
+	catch (const std::exception& error)
+	{
+		std::cerr << "Sample failed: " << error.what() << std::endl;
+		return 1;
+	}
+	catch (...)
+	{
+		std::cerr << "Sample failed." << std::endl;
+		return 1;
+	}
+}

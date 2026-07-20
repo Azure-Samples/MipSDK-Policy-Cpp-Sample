@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2000
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mipsdk-policyapi-cpp-sample-basic", "mipsdk-policyapi-cpp-sample-basic\mipsdk-policyapi-cpp-sample-basic.vcxproj", "{F8C94F02-CAD2-4449-843F-D6ABCD8A6634}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MipAuth.Managed", "MipAuth.Managed\MipAuth.Managed.csproj", "{D08361D3-15EA-470B-A889-9EA944AA34DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MipAuth.Managed.Tests", "MipAuth.Managed.Tests\MipAuth.Managed.Tests.csproj", "{E1D17187-A270-4B36-A8DD-5638D4054E26}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MipAuth.NativeSmoke", "MipAuth.NativeSmoke\MipAuth.NativeSmoke.vcxproj", "{C22B10E9-563B-4073-BDA9-FC75678051E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,28 @@ Global
 		{F8C94F02-CAD2-4449-843F-D6ABCD8A6634}.Release|x64.Build.0 = Release|x64
 		{F8C94F02-CAD2-4449-843F-D6ABCD8A6634}.Release|x86.ActiveCfg = Release|Win32
 		{F8C94F02-CAD2-4449-843F-D6ABCD8A6634}.Release|x86.Build.0 = Release|Win32
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Release|x64.Build.0 = Release|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{D08361D3-15EA-470B-A889-9EA944AA34DC}.Release|x86.Build.0 = Release|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Debug|x64.Build.0 = Debug|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Debug|x86.Build.0 = Debug|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Release|x64.ActiveCfg = Release|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Release|x64.Build.0 = Release|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Release|x86.ActiveCfg = Release|Any CPU
+		{E1D17187-A270-4B36-A8DD-5638D4054E26}.Release|x86.Build.0 = Release|Any CPU
+		{C22B10E9-563B-4073-BDA9-FC75678051E0}.Debug|x64.ActiveCfg = Debug|x64
+		{C22B10E9-563B-4073-BDA9-FC75678051E0}.Debug|x64.Build.0 = Debug|x64
+		{C22B10E9-563B-4073-BDA9-FC75678051E0}.Debug|x86.ActiveCfg = Debug|x64
+		{C22B10E9-563B-4073-BDA9-FC75678051E0}.Release|x64.ActiveCfg = Release|x64
+		{C22B10E9-563B-4073-BDA9-FC75678051E0}.Release|x64.Build.0 = Release|x64
+		{C22B10E9-563B-4073-BDA9-FC75678051E0}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
