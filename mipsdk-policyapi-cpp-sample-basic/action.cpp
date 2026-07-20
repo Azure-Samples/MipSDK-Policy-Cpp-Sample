@@ -67,8 +67,10 @@ namespace sample {
 		{			
 			mEngine = nullptr;
 			mProfile = nullptr;
-			mMipContext->ShutDown();
-			mMipContext = nullptr;
+			if (mMipContext) {
+				mMipContext->ShutDown();
+				mMipContext = nullptr;
+			}
 		}
 
 		// Load a Policy profile and bridge the asynchronous callback with a future.
