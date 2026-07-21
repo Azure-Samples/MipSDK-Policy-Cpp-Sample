@@ -98,14 +98,14 @@ public static unsafe class NativeEntryPoint
             request->TokenLength = length;
             return (int)MipAuthResult.Success;
         }
-        catch (ArgumentException)
+        catch (ArgumentException exception)
         {
-            WriteError(request, "Authentication request is invalid.");
+            WriteError(request, exception.Message);
             return (int)MipAuthResult.ValidationFailed;
         }
-        catch (JsonException)
+        catch (JsonException exception)
         {
-            WriteError(request, "Authentication request is invalid.");
+            WriteError(request, exception.Message);
             return (int)MipAuthResult.ValidationFailed;
         }
         catch (MsalException)

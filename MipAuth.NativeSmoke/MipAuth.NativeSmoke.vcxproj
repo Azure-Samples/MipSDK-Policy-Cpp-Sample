@@ -44,7 +44,7 @@
     <SolutionDir Condition="'$(SolutionDir)'=='' Or '$(SolutionDir)'=='*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
     <OutDir>$(SolutionDir)x64\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
-    <DotNetHostNativeDir>$(SolutionDir)packages\Microsoft.NETCore.App.Host.win-x64.8.0.29\runtimes\win-x64\native\</DotNetHostNativeDir>
+    <DotNetHostNativeDir>$(SolutionDir)packages\Microsoft.NETCore.App.Host.$(DotNetHostRid).$(DotNetHostVersion)\runtimes\$(DotNetHostRid)\native\</DotNetHostNativeDir>
     <ManagedAuthOutputDir>$(SolutionDir)MipAuth.Managed\bin\$(Configuration)\net8.0\</ManagedAuthOutputDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -102,7 +102,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
   <Target Name="EnsureHostPackage" BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('$(DotNetHostNativeDir)nethost.lib')" Text="Restore Microsoft.NETCore.App.Host.win-x64 8.0.29 before building." />
+    <Error Condition="!Exists('$(DotNetHostNativeDir)nethost.lib')" Text="Restore Microsoft.NETCore.App.Host.$(DotNetHostRid) $(DotNetHostVersion) before building." />
   </Target>
   <Target Name="CopyManagedAuthentication" AfterTargets="Build">
     <ItemGroup>

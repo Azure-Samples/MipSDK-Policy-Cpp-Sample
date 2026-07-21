@@ -27,9 +27,11 @@ public sealed class NativeEntryPointTests
 
         Assert.Equal((int)MipAuthResult.ValidationFailed, result);
         Assert.Equal((uint)0, response.TokenLength);
-        Assert.Equal(
-            "Authentication request is invalid.",
-            Marshal.PtrToStringUTF8(response.ErrorBuffer, checked((int)response.ErrorLength)));
+        string? error = Marshal.PtrToStringUTF8(
+            response.ErrorBuffer,
+            checked((int)response.ErrorLength));
+        Assert.NotNull(error);
+        Assert.Contains("tenant domain", error, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

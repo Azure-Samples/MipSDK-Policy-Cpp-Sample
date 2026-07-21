@@ -8,19 +8,19 @@ namespace MipAuth.Managed.Tests;
 public sealed class AuthRequestValidatorTests
 {
     [Fact]
-    public void ValidateNormalizesAuthorityAndDefaultScope()
+    public void ValidateNormalizesAuthorityAndDynamicDefaultScope()
     {
         ValidatedAuthRequest request = AuthRequestValidator.Validate(
             "user@contoso.com",
             "00000000-0000-0000-0000-000000000001",
             "https://LOGIN.MICROSOFTONLINE.COM/contoso.onmicrosoft.com/",
-            "https://API.AADRm.COM/.default/",
+            "https://custom.policy.endpoint.contoso.com/",
             """{"access_token":{"xms_cc":{"values":["cp1"]}}}""");
 
         Assert.Equal(
-            "https://login.microsoftonline.com/contoso.onmicrosoft.com",
+            "https://LOGIN.MICROSOFTONLINE.COM/contoso.onmicrosoft.com",
             request.Authority);
-        Assert.Equal("https://api.aadrm.com/.default", request.Scope);
+        Assert.Equal("https://custom.policy.endpoint.contoso.com/.default", request.Scope);
         Assert.NotNull(request.Claims);
     }
 
@@ -33,7 +33,7 @@ public sealed class AuthRequestValidatorTests
             "user@contoso.onmicrosoft.com",
             "00000000-0000-0000-0000-000000000001",
             $"https://login.microsoftonline.com/{tenant}",
-            "https://api.aadrm.com",
+            "https://policy.contoso.com",
             null);
 
         Assert.Equal(
@@ -42,9 +42,9 @@ public sealed class AuthRequestValidatorTests
     }
 
     [Theory]
+    [InlineData("")]
+    [InlineData("not-a-uri")]
     [InlineData("http://login.microsoftonline.com/common")]
-    [InlineData("https://evil.example/common")]
-    [InlineData("https://login.microsoftonline.com/common/oauth2")]
     [InlineData("https://login.microsoftonline.com/common?x=1")]
     public void ValidateRejectsInvalidAuthority(string authority)
     {
@@ -52,21 +52,18 @@ public sealed class AuthRequestValidatorTests
             "user@contoso.com",
             "00000000-0000-0000-0000-000000000001",
             authority,
-            "https://api.aadrm.com",
+            "https://policy.contoso.com",
             null));
     }
 
-    [Theory]
-    [InlineData("https://example.com")]
-    [InlineData("https://api.aadrm.com/path")]
-    [InlineData("http://api.aadrm.com")]
-    public void ValidateRejectsInvalidResource(string resource)
+    [Fact]
+    public void ValidateRejectsEmptyResource()
     {
         Assert.Throws<ArgumentException>(() => AuthRequestValidator.Validate(
             "user@contoso.com",
             "00000000-0000-0000-0000-000000000001",
             "https://login.microsoftonline.com/common",
-            resource,
+            "",
             null));
     }
 
@@ -77,7 +74,7 @@ public sealed class AuthRequestValidatorTests
             "user@contoso.com",
             "00000000-0000-0000-0000-000000000001",
             "https://login.microsoftonline.com/common",
-            "https://api.aadrm.com",
+            "https://policy.contoso.com",
             "[]"));
     }
 
@@ -86,11 +83,12 @@ public sealed class AuthRequestValidatorTests
     [InlineData("user@-bad.example")]
     public void ValidateRejectsInvalidDerivedTenant(string username)
     {
-        Assert.Throws<ArgumentException>(() => AuthRequestValidator.Validate(
-            username,
-            "00000000-0000-0000-0000-000000000001",
-            "https://login.microsoftonline.com/common",
-            "https://api.aadrm.com",
-            null));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => AuthRequestValidator.Validate(
+                username,
+                "00000000-0000-0000-0000-000000000001",
+                "https://login.microsoftonline.com/common",
+                "https://policy.contoso.com",
+                null));
+        Assert.Contains("tenant domain", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 }

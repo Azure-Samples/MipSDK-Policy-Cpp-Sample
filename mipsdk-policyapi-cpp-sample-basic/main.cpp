@@ -28,7 +28,6 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
-#include <limits>
 #include <memory>
 #include <sstream>
 #include <vector>
@@ -56,7 +55,7 @@ using sample::policy::Action;
 
 namespace {
 	void PauseForUser() {
-		std::cout << "Press Enter to continue...";
+		std::cout << "Press Enter to continue..." << std::flush;
 		std::string line;
 		std::getline(std::cin, line);
 	}
@@ -86,11 +85,11 @@ int RunSample()
 
 	// Select the label currently applied to the simulated content.
 	cout << endl << endl << "Enter a label ID: ";
-	cin >> currentLabelId;
+	std::getline(cin >> std::ws, currentLabelId);
 
 	// Select the label to apply.
 	cout << endl << "Enter a new label ID: ";
-	cin >> newLabelId;
+	std::getline(cin >> std::ws, newLabelId);
 
 	// Describe the simulated content and labeling operation.
 	sample::policy::ExecutionStateOptions options;
@@ -142,7 +141,6 @@ int RunSample()
 	// Compute and process actions until the desired state is satisfied.
 	auto result = action.ComputeActionLoop(options);	
 	
-	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	PauseForUser();
 
 	return 0;
