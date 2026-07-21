@@ -48,11 +48,10 @@ The native process locates `hostfxr` through the official `nethost` API, initial
 
 The managed component:
 
-- strictly validates known Microsoft identity authority hosts and MIP Policy resource origins;
-- normalizes the requested resource to one `/.default` scope;
-- checks the in-process MSAL cache for an exact, case-insensitive username match;
-- falls back to interactive authentication in the system browser;
-- forwards JSON claims challenges to silent and interactive MSAL requests; and
+- passes authority/resource/claims values directly from each MIP SDK OAuth challenge;
+- normalizes the challenge resource to one `/.default` scope and uses that same scope for both silent and interactive MSAL requests;
+- checks the in-process MSAL cache for an exact, case-insensitive username match before interactive fallback;
+- normalizes `/common` and `/organizations` authorities to a tenant-specific authority derived from the signed-in username domain; and
 - never accepts passwords, parses JWTs, or logs tokens.
 
 No authentication environment variables or external helper processes are required.

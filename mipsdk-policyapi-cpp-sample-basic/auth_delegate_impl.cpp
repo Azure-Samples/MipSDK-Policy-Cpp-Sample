@@ -51,6 +51,7 @@ namespace sample {
 			OAuth2Token& token) {
 			
 			try {
+				// Always pass challenge values through from the SDK. Do not hard-code or re-validate endpoints.
 				string accessToken = sample::auth::AcquireToken(
 					mUserName,
 					mApplicationInfo.applicationId,

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <DotNetHostVersion>8.0.29</DotNetHostVersion>
+    <DotNetHostRid>win-x64</DotNetHostRid>
+  </PropertyGroup>
+</Project>

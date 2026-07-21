@@ -18,7 +18,10 @@ int main() {
 			"");
 	}
 	catch (const std::runtime_error& error) {
-		if (std::string(error.what()) == "Authentication request is invalid.") {
+		const std::string message = error.what();
+		if (!message.empty() &&
+			message.find("tenant domain") != std::string::npos &&
+			message.find_first_of("\r\n") == std::string::npos) {
 			return 0;
 		}
 	}

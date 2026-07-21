@@ -24,6 +24,7 @@ public sealed class AuthenticationServiceTests
         Assert.Equal("silent-token", token);
         Assert.Equal(1, client.SilentCalls);
         Assert.Equal(0, client.InteractiveCalls);
+        Assert.Equal(request.Scope, client.LastSilentScope);
         Assert.Equal(request.Claims, client.LastClaims);
     }
 
@@ -41,6 +42,8 @@ public sealed class AuthenticationServiceTests
         Assert.Equal("interactive-token", token);
         Assert.Equal(1, client.SilentCalls);
         Assert.Equal(1, client.InteractiveCalls);
+        Assert.Equal(request.Scope, client.LastSilentScope);
+        Assert.Equal(request.Scope, client.LastInteractiveScope);
         Assert.Equal(request.Claims, client.LastClaims);
     }
 
@@ -48,7 +51,7 @@ public sealed class AuthenticationServiceTests
         "user@contoso.com",
         "00000000-0000-0000-0000-000000000001",
         "https://login.microsoftonline.com/common",
-        "https://api.aadrm.com",
+        "https://policy.contoso.com",
         """{"access_token":{"xms_cc":{"values":["cp1"]}}}""");
 
     private sealed class FakeAuthenticationClient(
@@ -58,6 +61,8 @@ public sealed class AuthenticationServiceTests
     {
         internal int SilentCalls { get; private set; }
         internal int InteractiveCalls { get; private set; }
+        internal string? LastSilentScope { get; private set; }
+        internal string? LastInteractiveScope { get; private set; }
         internal string? LastClaims { get; private set; }
 
         public Task<IReadOnlyList<AuthenticationAccount>> GetAccountsAsync() =>
@@ -69,6 +74,7 @@ public sealed class AuthenticationServiceTests
             string? claims)
         {
             SilentCalls++;
+            LastSilentScope = scope;
             LastClaims = claims;
             return Task.FromResult(silentToken);
         }
@@ -79,6 +85,7 @@ public sealed class AuthenticationServiceTests
             string? claims)
         {
             InteractiveCalls++;
+            LastInteractiveScope = scope;
             LastClaims = claims;
             return Task.FromResult(interactiveToken);
         }
